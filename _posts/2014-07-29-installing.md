@@ -1,0 +1,299 @@
+---
+layout: page
+title: "Installation"
+category: doc
+date: 2014-07-29 18:35:27
+order: 1
+---
+
+## Installation instructions
+
+MailWatch for MailScanner is developed on RedHat 9 & RHEL 3.0, so these docs will reflect this and I will make note on anything that will be required to run on other distro's or operating systems.
+
+### Before you start
+
+You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBD and DBD-MySQL.
+
+### Support
+
+Please use the mailing-list [mailwatch-users](http://lists.sourceforge.net/lists/listinfo/mailwatch-users) on Sourceforge.  Note that you will get faster support if you use the mailing-list.
+
+### Notes for other operating systems/linux distro's
+
+PHP should have the following set in php.ini (possibly others too....)
+
+```ini
+safe_mode = Off
+register_globals = Off
+magic_quotes_gpc = On
+magic_quotes_runtime = Off
+session.auto_start = 0
+```
+
+## Installation
+
+All commands below should be run as the 'root'.
+
+### Create the database
+
+```bash
+mysql < create.sql
+```
+
+NOTE: you will need to modify the above as necessary for your system if you have a root password for your MySQL database (recommended!).
+
+### Create a MySQL user and password & Set-up MailScanner for SQL logging
+
+```bash
+$ mysql
+```
+```sql
+mysql> GRANT ALL ON mailscanner.* TO mailwatch@localhost IDENTIFIED BY '<password>';
+mysql> GRANT FILE ON *.* TO mailwatch@localhost IDENTIFIED BY '<password>';
+mysql> FLUSH PRIVILEGES;
+```
+
+Edit MailWatch.pm and change the `$db_user` and `$db_pass` values accordingly and move `MailWatch.pm` to `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
+
+### Create a MailWatch web user
+
+```bash
+mysql mailscanner -u mailwatch -p
+```
+```sql
+Enter password: ******
+mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>'), fullname = '<name>', type = 'A'
+```
+
+### Install & Configure MailWatch
+
+* Move the mailscanner directory to the web server's root.
+
+    ```bash
+    mv mailscanner /var/www/html/
+    ```
+
+* Check the permissions of /var/www/html/mailscanner/images and /var/www/html/images/cache - they should be ug+rwx and owned by root and in the same group as the web server user (apache on RedHat 9).
+
+    ```bash
+    chown root:apache images
+    chmod ug+rwx images
+    chown root:apache images/cache
+    chmod ug+rwx images/cache
+    ```
+
+* Create `conf.php` by copying `conf.php.example` and edit the values to suit, you will need to set `DB_USER` and `DB_PASS` to the MySQL user and password that you created earlier.
+
+    Note that MailWatch 1.0 and later can use the quarantine more effectively when used with MailScanner version 4.43 or later as Julian added some code for me to keep track of messages quarantined by using a flag in the maillog table.
+
+    This means that MailWatch 1.0 is *much* faster when you have a large quarantine directory.  The new quarantine report requires the use of the new functionality - so you must upgrade if you want to run this.
+    The new quarantine flag is used by default and you must disable the clean.quarantine script supplied by MailScanner and use the new quarantine_maint.php script in the tools directory instead.
+
+    To clean the quarantine - set `QUARANTINE_DAYS_TO_KEEP` in conf.php and run './quarantine_maint --clean'.  This should then be run daily from cron.
+    If you are still using MailScanner 4.42 or older, updating your installation is highly recommanded; if you can't update you need to set the `QUARANTINE_USE_FLAG` to false in conf.php and use the clean.quarantine script supplied by MailScanner.
+
+    ```bash
+    cp conf.php.example conf.php
+    ```
+
+### Set-up MailScanner
+
+Stop MailScanner
+
+```bash
+service MailScanner stop
+```
+
+Next edit `/etc/MailScanner/MailScanner.conf` - you need to make sure that the following options are set:
+
+```cfg
+Always Looked Up Last = &MailWatchLogging
+Detailed Spam Report = yes
+Quarantine Whole Message = yes
+Quarantine Whole Messages As Queue Files = no
+Include Scores In SpamAssassin Report = yes
+Quarantine User = root
+Quarantine Group = apache (this should be the same group as your web server)
+Quarantine Permissions = 0660
+```
+
+Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
+
+If you want to use the integrate Blacklist/Whitelist (optional):
+
+then edit the file and change the connection string in the CreateList subroutine to match MailWatch.pm.
+
+Copy `SQLBlackWhiteList.pm` to `/usr/lib/MailScanner/MailScanner/CustomFunctions` and in `MailScanner.conf` set:
+
+```cfg
+Is Definitely Not Spam = &SQLWhitelist
+Is Definitely Spam = &SQLBlacklist
+```
+
+Then edit `SQLBlackWhitelist.pm` and change the connection string in the
+CreateList subroutine to match MailWatch.pm.
+
+Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
+
+Edit `/etc/MailScanner/spam.assassin.prefs.conf` and set:
+
+```
+bayes_path /etc/MailScanner/bayes/bayes
+bayes_file_mode 0660
+```
+
+Create the 'new' bayes directory, make the directory owned by the same group as the web server user and make the directory setgid:
+
+```bash
+mkdir /etc/MailScanner/bayes
+chown root:apache /etc/MailScanner/bayes
+chmod g+rws /etc/MailScanner/bayes
+```
+
+Copy the existing bayes databases and set the permissions:
+
+```bash
+cp /root/.spamassassin/bayes_* /etc/MailScanner/bayes
+chown root:apache /etc/MailScanner/bayes/bayes_*
+chmod g+rw /etc/MailScanner/bayes/bayes_*
+```
+
+Test SpamAssassin to make sure that it is using the new databases correctly:
+
+```bash
+spamassassin -D -p /etc/MailScanner/spam.assassin.prefs.conf --lint
+```
+
+and you should see something like:
+
+```
+debug: using "/etc/MailScanner/spam.assassin.prefs.conf" for user prefs file
+debug: bayes: 28821 tie-ing to DB file R/O /etc/MailScanner/bayes/bayes_toks
+debug: bayes: 28821 tie-ing to DB file R/O /etc/MailScanner/bayes/bayes_seen
+debug: bayes: found bayes db version 2
+debug: Score set 3 chosen.
+```
+
+Start MailScanner up again.
+
+```bash
+service MailScanner start && tail -f /var/log/maillog
+```
+
+You should see something like:
+
+```
+Jun 13 12:18:23 hoshi MailScanner[26388]: MailScanner E-Mail Virus Scanner version 4.20-3 starting...
+Jun 13 12:18:24 hoshi MailScanner[26388]: Config: calling custom init function MailWatchLogging
+Jun 13 12:18:24 hoshi MailScanner[26388]: Initialising database connection
+Jun 13 12:18:24 hoshi MailScanner[26388]: Finished initialising database connection
+```
+
+Congratulations - you now have MailScanner logging to MySQL.
+
+If you want to see the output of `MailScanner --lint` in Tools/MailScanner Lint (Test) edit conf.php and set MS_EXECUTABLE_PATH, the follow instruction in tools/sudo/INSTALL
+
+### Database cleanup of maillog records
+
+add `db_clean.php` to `/etc/cron.daily/`
+
+You will then to edit `conf.php` the RECORD_DAYS_TO_KEEP definition.
+
+You will need to edit the `db_clean.php` to reflect the location of the `functions.php` file
+
+### Quarantine Maintenance
+
+Remove the clean.quarantine cronjob configured with MailScanner.
+
+Edit and copy `quarantine_maint.sh` to `/etc/cron.daily/`
+
+You will then to edit `conf.php` the QUARANTINE_DAYS_TO_KEEP definition.
+
+You will need to edit the `quarantine_maint.php` to reflect the location of the `functions.php` file
+
+### Quarantine Reporting
+
+Add `quarantine_report.php` to `/etc/cron.daily`
+
+You will need to edit the `quarantine_report.php` to reflect the location of the `functions.php` file
+
+### Test the MailWatch interface
+
+Point your browser to http://<hostname>/mailscanner/ - you should be prompted for a username and password - enter the details of the MailWatch web user that you created earlier, and you should see a list of the last 50 messages processed by MailScanner.
+
+- Update the SpamAssassin Rules table
+  MailWatch keeps a list of all the SpamAssassin rules and descriptions which are displayed on the 'Message Detail' page - to show the descriptions, you need to run the updater every time you add new rules or upgrade SpamAssassin.
+  Click on the 'Other' menu and select 'Update SpamAssassin Rule Descriptions' and click 'Run Now'.
+
+- Update the GeoIP database
+  Click on the 'Other' menu and select 'Update GeoIP database' and click 'Run Now'.
+
+- Setup the Mail Queue watcher (optional)
+  You can get MailWatch to watch and display your sendmail queue directories - all you need to do is copy mailq.php (from the root of the MailWatch archive - not from the mailscanner directory - they are different!) to /usr/local/bin and set-up a cron-job to run it.
+
+### Optional for items Sendmail
+
+Edit `mailq.php` first to change the require line to point to the location of `functions.php`, then:
+
+```bash
+cp tools/Sendmail_queue/mailq.php /usr/local/bin
+crontab -e
+
+0-59 * * * * 	/usr/local/bin/mailq.php
+```
+
+Note: mailq.php re-creates all entries on each run, so for busy sites you will probably want to change this to run every 5 minutes or greater.
+
+#### Setup the Sendmail Relay Log watcher (optional)
+
+You can get MailWatch to watch your sendmail logs and store all message relay information which is then displayed on the 'Message Detail' page which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
+
+```bash
+cp tools/Sendmail_relay/sendmail_relay.php /usr/local/bin
+cp tools/Sendmail_relay/sendmail_relay.init /etc/rc.d/init.d/
+chmod 777 /etc/rc.d/init.d/sendmail_relay.init
+/etc/rc.d/init.d/sendmail_relay.init start
+ln -s /etc/rc.d/ini.d/sendmail_relay.init /etc/rc.2/S30sendmail_relay.init
+```
+
+### Optional for item Postfix
+
+Adding Postfix relay information
+
+* Add the table to the database
+
+    ```bash
+    mysql -p mailscanner < tools/Postfix_relay/create_relay_postfix.sql
+    ```
+* Edit the parser and add it as an hourly cron job
+* Edit the parser for location of MailWatch webpages
+* Edit `mailscanner_relay.php` in the mailscanner folder
+
+### Optional for MailScanner Rule Editor
+
+Make sure MailWatch's conf.php has the following lines at the end (amend as appropriate)
+
+```php
+<?php
+// Enable MailScanner Rule Editor
+define('MSRE', true);
+define('MSRE_RELOAD_INTERVAL', 5);
+define('MSRE_RULESET_DIR', "/etc/MailScanner/rules");
+```
+
+Change file permissions so that we can update the rules
+change group and rules directory locations as appropriate
+
+```bash
+chgrp -R apache /etc/MailScanner/rules
+chmod g+rwxs /etc/MailScanner/rules
+chmod g+rw /etc/MailScanner/rules/*.rules
+```
+
+See also the INSTALL docs in tools/MailScanner_rule_editor and tools/Cron_jobs
+
+### FINISHED!! (Phew!)
+
+Please send any errors or omissions to the mailing-list or directly to me.
+
+Thanks!

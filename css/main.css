@@ -1,0 +1,94 @@
+/*body {
+    font-weight: 400;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+pre, code {
+    border: none;
+    border-radius: 0;
+    background-color: #f9f9f9;
+    font-size: 0.85em;
+}
+
+pre {
+    font-size: 1em;
+}
+
+code {
+    color: inherit;
+}
+
+#header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+#header a:hover {
+    text-decoration: none;
+}*/
+
+
+body {
+    font-family: 'PT Sans', sans-serif;
+    font-size: 16px;
+}
+
+header .nav {
+    margin-top: 8px;
+}
+
+header .nav a {
+    color: #333;
+    font-weight: bold;
+}
+
+header .nav > li > a:hover,
+header .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #f0c945;
+}
+/*pre, code {
+    border: none;
+    border-radius: 0;
+    background-color: #f9f9f9;
+    font-size: 0.85em;
+}
+
+code {
+    color: inherit;
+}*/
+
+footer {
+    margin: 20px 0;
+    font-size: 0.85em;
+    color: #999;
+    text-align: center;
+}
+
+#content > .page-header:first-child {
+    margin-top: 0;
+}
+
+#content > .page-header:first-child h2 {
+    margin-top: 0;
+}
+
+
+#navigation {
+    font-size: 0.9em;
+    margin-top: 20px;
+}
+
+#navigation li a {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#navigation .nav-header {
+    padding-left: 0;
+    padding-right: 0;
+}
+#navigation .nav > li > a {
+    padding-top: 0;
+    padding-bottom: 0;
+}
