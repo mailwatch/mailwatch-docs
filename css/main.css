@@ -26,7 +26,9 @@ code {
 #header a:hover {
     text-decoration: none;
 }*/
-
+html {
+    overflow-y: scroll;
+}
 
 body {
     font-family: 'PT Sans', sans-serif;
