@@ -8,7 +8,7 @@ order: 1
 
 ## Installation instructions
 
-MailWatch for MailScanner is developed on RedHat 9 & RHEL 3.0, so these docs will reflect this and I will make note on anything that will be required to run on other distro's or operating systems.
+MailWatch for MailScanner is developed on Debian 7 & Ubuntu 12.04, so these docs will reflect this and I will make note on anything that will be required to run on other distro's or operating systems.
 
 ### Before you start
 
@@ -18,14 +18,14 @@ You must have a working MailScanner set-up and have running copies of MySQL, Apa
 
 Please use the mailing-list [mailwatch-users](http://lists.sourceforge.net/lists/listinfo/mailwatch-users) on Sourceforge.  Note that you will get faster support if you use the mailing-list.
 
-### Notes for other operating systems/linux distro's
+### Notes for PHP configuration
 
 PHP should have the following set in php.ini (possibly others too....)
 
 ```ini
 safe_mode = Off
 register_globals = Off
-magic_quotes_gpc = On
+magic_quotes_gpc = Off
 magic_quotes_runtime = Off
 session.auto_start = 0
 ```
@@ -67,13 +67,13 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
 
 ### Install & Configure MailWatch
 
-* Move the mailscanner directory to the web server's root.
+* Move the `mailscanner` directory to the web server's root.
 
     ```bash
     mv mailscanner /var/www/html/
     ```
 
-* Check the permissions of /var/www/html/mailscanner/images and /var/www/html/images/cache - they should be ug+rwx and owned by root and in the same group as the web server user (apache on RedHat 9).
+* Check the permissions of `/var/www/html/mailscanner/images` and `/var/www/html/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat).
 
     ```bash
     chown root:apache images
@@ -130,8 +130,7 @@ Is Definitely Not Spam = &SQLWhitelist
 Is Definitely Spam = &SQLBlacklist
 ```
 
-Then edit `SQLBlackWhitelist.pm` and change the connection string in the
-CreateList subroutine to match MailWatch.pm.
+Then edit `SQLBlackWhitelist.pm` and change the connection string in the `CreateList` subroutine to match `MailWatch.pm`.
 
 Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
 
@@ -290,10 +289,10 @@ chmod g+rwxs /etc/MailScanner/rules
 chmod g+rw /etc/MailScanner/rules/*.rules
 ```
 
-See also the INSTALL docs in tools/MailScanner_rule_editor and tools/Cron_jobs
+See also the INSTALL docs in `tools/MailScanner_rule_editor` and `tools/Cron_jobs`
 
 ### FINISHED!! (Phew!)
 
-Please send any errors or omissions to the mailing-list or directly to me.
+Please open an [issue on GitHub](https://github.com/mailwatch/1.2.0/issues) or report to the mailing-list if you find any errors or omissions.
 
 Thanks!
