@@ -32,7 +32,7 @@ Note: The issue tracker is for bugs and new features, not help requests. For pro
 * [Submit an issue](https://github.com/mailwatch/1.2.0/issues) for your issue, assuming one does not already exist.
    * Clearly describe the issue and your enviroment including steps to reproduce when it is a bug.
    * Make sure you fill in the earliest version that you know has the issue.
-* Fork the repository on GitHub or do a hard reset (`git fetch upstream && git reset --hard upstream/master && git push`) to update an existing fork.
+* Fork the repository on GitHub or do a hard reset (first [add upstream to your fork](https://help.github.com/articles/configuring-a-remote-for-a-fork/) and then issue a `git fetch upstream && git reset --hard upstream/master && git push` command) to update an existing fork.
 
 #### Branching and pull requests
 As a guideline, please follow this process:
