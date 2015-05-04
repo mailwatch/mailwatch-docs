@@ -2,11 +2,30 @@
 layout: page
 title: "Changelog"
 category: dev
-date: 2014-07-30 12:49:42
+date: 2015-05-04 14:43:42
 order: 1
 ---
 
 ##Changelog
+
+1.2.0 - Beta 8
+-----------
+
+ - Correct unexpected behaviour in viewpart.php if one or more headers are not set
+ - Refactor message part viewer
+ - Sanitize user input
+ - Hide MCP-related fields if MCP is not enabled in MailScanner
+
+1.2.0 - Beta 7
+-----------
+
+ - Fix documentation regarding magic_quotes_gpc
+ - Redirect to original link after login (e.g. from quarantine report)
+ - Fix to GPL v2 licensing problems
+ - Updated MailScanner default path to comply with version 4.85.2-1
+ - Add `--max-size` support to `sa-learn` if spamassassin >= 3.4.0
+ - Separate release action in Message Operations from Spam/Ham/Forget radio button
+ - Domain Administrator get all domain emails if their username is either an email address or a domain name
 
 1.2.0 - Beta 6
 -----------
