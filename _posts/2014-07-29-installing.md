@@ -14,6 +14,16 @@ MailWatch for MailScanner is developed on Debian 7 & Ubuntu 12.04, so these docs
 
 You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBI and DBD::mysql; you also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding.
 
+Some PHP extensions and executable software are required to make MailWatch fully works:
+
+* MySQL extension (required to connect to database)
+* GD extension (required to generate graphs on reports)
+* MBstring extension (required to display non-ascii characters)
+* exec function not disabled in php.ini
+* Curl extension or fsockopen function enabled (needed to download GeoIP files)
+* Zlib extension or gunzip executable (needed to extract GeoIP files)
+* Ldap extension (needed if you are authenticating users on LDAP server)
+
 ### Support
 
 Please use the mailing-list [mailwatch-users](http://lists.sourceforge.net/lists/listinfo/mailwatch-users) on Sourceforge.  Note that you will get faster support if you use the mailing-list.
