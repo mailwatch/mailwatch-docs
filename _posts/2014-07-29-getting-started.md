@@ -6,7 +6,7 @@ date: 2014-07-29 18:35:26
 order: 0
 ---
 
-##Getting Started
+## Getting Started
 
 You must have a working MailScanner set-up and have running copies of:
 

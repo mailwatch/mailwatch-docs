@@ -26,10 +26,6 @@ baseurl: ''
 # Dates are not included in permalinks
 permalink: none
 
-# Syntax highlighting
-highlighter: pygments
-#highlighter: rouge
-
 # Since these are pages, it doesn't really matter
 future: true
 
@@ -42,20 +38,7 @@ gems:
 exclude: ['bin', 'README.md', 'LICENSE.md']
 
 # Use the kramdown Markdown renderer
-#markdown: kramdown
-#kramdown:
-#  input: GFM
-
-# Use the redcarpet Markdown renderer
-markdown: redcarpet
-redcarpet:
-    extensions: [
-        'no_intra_emphasis',
-        'fenced_code_blocks',
-        'autolink',
-        'strikethrough',
-        'superscript',
-        'with_toc_data',
-        'tables',
-        'hardwrap'
-    ]
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge

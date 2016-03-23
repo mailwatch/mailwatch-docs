@@ -1,4 +1,4 @@
-#Docs.MailWatch.org
+# Docs.MailWatch.org
 
 Repository for MailWatch documentation
 

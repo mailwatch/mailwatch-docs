@@ -3,13 +3,13 @@ layout: default
 title: "MailWatch for MailScanner Documentation"
 ---
 
-##About
+## About
 
 MailWatch for MailScanner is a web-based front-end to MailScanner written in PHP and MySQL and is available for free under the terms of the GNU Public License.
 
 It comes with a CustomConfig module for MailScanner which causes MailScanner to log all message data (excluding body text) to a MySQL database which is then queried by MailWatch for reporting and statistics.
 
-##Features
+## Features
 
 * Displays the inbound/outbound mail queue size (currently for Sendmail/Postfix/Exim users only), Load Average and Today's Totals for Messages, Spam, Viruses and Blocked Content on each page header.
 * Colour-coded display of recently processed mail.
@@ -21,10 +21,10 @@ It comes with a CustomConfig module for MailScanner which causes MailScanner to 
 * Multiple user levels: user, domain and admin that limit the data and features available to each.
 * XML-RPC support that allows multiple MailScanner/MailWatch installations to act as one.
 
-##Download
+## Download
 
 You can find the latest version on [GitHub]({{ site.codeurl }})
 
-##Support
+## Support
 
 Subscribe to the [mailwatch-users](http://lists.sourceforge.net/lists/listinfo/mailwatch-users) mailing-list. Note that you will get faster support by using the mailing-list.
