@@ -1,4 +1,5 @@
 *.sw?
 _site/
 _pages
+/.jekyll-metadata
 Gemfile.lock
