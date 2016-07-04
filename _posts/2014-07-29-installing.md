@@ -12,7 +12,7 @@ MailWatch for MailScanner is developed on Debian 7 & Ubuntu 12.04, so these docs
 
 ### Before you start
 
-You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBI and DBD::mysql; you also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding.
+You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBI and DBD::mysql.
 
 Some PHP extensions and executable software are required to make MailWatch fully works:
 
