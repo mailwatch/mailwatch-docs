@@ -22,7 +22,7 @@ Some PHP extensions and executable software are required to make MailWatch fully
 * exec function not disabled in php.ini
 * Curl extension or fsockopen function enabled (needed to download GeoIP files)
 * Zlib extension or gunzip executable (needed to extract GeoIP files)
-* Ldap extension (needed if you are authenticating users on LDAP server)
+* Ldap extension (needed if you are authenticating users on LDAP server or Active Directory)
 
 ### Support
 
@@ -63,7 +63,9 @@ mysql> GRANT FILE ON *.* TO mailwatch@localhost IDENTIFIED BY '<password>';
 mysql> FLUSH PRIVILEGES;
 ```
 
-Edit MailWatch.pm and change the `$db_user` and `$db_pass` values accordingly and move `MailWatch.pm` to `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
+Edit MailWatch.pm and change the `$db_user` and `$db_pass` values (around line 42) accordingly and move `MailWatch.pm` to:
+  * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
+  * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
 
 ### Create a MailWatch web user
 
@@ -132,16 +134,18 @@ Spam Actions and High Scoring Spam Actions should also have 'store' as one of th
 ### Integrate Blacklist/Whitelist (optional)
 With MailWatch you can manage whitelist and blacklist from the web interface.
 
-Edit `SQLBlackWhiteList.pm` file and change the connection string in the CreateList subroutine (lines 103-106) to match MailWatch.pm.
+Edit `SQLBlackWhiteList.pm` file and change the connection string in the `CreateList` subroutine (lines 103-106) to match `MailWatch.pm`.
 
-Copy `SQLBlackWhiteList.pm` to `/usr/lib/MailScanner/MailScanner/CustomFunctions` and in `MailScanner.conf` set:
+Copy `SQLBlackWhiteList.pm` to:
+  * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
+  * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
+
+and in `MailScanner.conf` set:
 
 ```cfg
 Is Definitely Not Spam = &SQLWhitelist
 Is Definitely Spam = &SQLBlacklist
 ```
-
-Then edit `SQLBlackWhitelist.pm` and change the connection string in the `CreateList` subroutine to match `MailWatch.pm`.
 
 Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
 
