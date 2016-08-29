@@ -32,7 +32,7 @@ Note: The issue tracker is for bugs and new features, not help requests. For pro
 * [Submit an issue](https://github.com/mailwatch/1.2.0/issues) for your issue, assuming one does not already exist.
    * Clearly describe the issue and your enviroment including steps to reproduce when it is a bug.
    * Make sure you fill in the earliest version that you know has the issue.
-* Fork the repository on GitHub or do a hard reset (first [add upstream to your fork](https://help.github.com/articles/configuring-a-remote-for-a-fork/) and then issue a `git fetch upstream && git reset --hard upstream/master && git push` command) to update an existing fork.
+* If you want to contribute new code or fix existing one fork the repository on GitHub or do a hard reset (first [add upstream to your fork](https://help.github.com/articles/configuring-a-remote-for-a-fork/) and then issue a `git fetch upstream && git checkout develop && git reset --hard upstream/develop && git push` command) to update an existing fork.
 
 #### Branching and pull requests
 As a guideline, please follow this process:
@@ -44,7 +44,7 @@ As a guideline, please follow this process:
  3. Make the relevant changes.
  4. [Squash](http://git-scm.com/book/en/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) commits if necessary.
  5. It should go without saying, but do not increment the version number in your commits.
- 6. [Submit a pull request](https://help.github.com/articles/using-pull-requests) to the **master** branch.
+ 6. [Submit a pull request](https://help.github.com/articles/using-pull-requests) to the **develop** branch.
 
 Please note this is a general guideline only.
 
