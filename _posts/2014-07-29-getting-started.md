@@ -20,4 +20,6 @@ And for MailScanner CustomConfig modules to be able to use a database, you need:
 - DBI
 - DBD-MySQL
 
+You also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding.
+
 Please read through the installation/upgrading instructions in their entirety before proceeding.
