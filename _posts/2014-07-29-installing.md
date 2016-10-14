@@ -64,6 +64,7 @@ mysql> FLUSH PRIVILEGES;
 ```
 
 Edit MailWatch.pm and change the `$db_user` and `$db_pass` values (around line 42) accordingly and move `MailWatch.pm` to:
+
   * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
   * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
 
@@ -137,6 +138,7 @@ With MailWatch you can manage whitelist and blacklist from the web interface.
 Edit `SQLBlackWhiteList.pm` file and change the connection string in the `CreateList` subroutine (lines 103-106) to match `MailWatch.pm`.
 
 Copy `SQLBlackWhiteList.pm` to:
+
   * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
   * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
 
@@ -280,6 +282,7 @@ You can get MailWatch to watch your sendmail logs and store all message relay in
 ```shell
  $ mysql -p mailscanner < tools/Postfix_relay/create_relay_postfix.sql
 ```
+
 * Edit `mailwatch_relay.sh` and modify it to point to your php location, its configuration file and correct MailWatch installation path
 * Add `mailwatch_relay.sh` as an hourly cron job
 
