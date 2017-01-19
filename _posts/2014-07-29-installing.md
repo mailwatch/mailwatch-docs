@@ -93,7 +93,7 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
  $ chmod ug+rwx images
  $ chown root:apache images/cache
  $ chmod ug+rwx images/cache
- $ chown root:www-data temp
+ $ chown root:apache temp
  $ chmod g+rw temp
 ```
 
