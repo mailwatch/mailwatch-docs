@@ -86,13 +86,15 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
  $ mv mailscanner /var/www/html/
 ```
 
-* Check the permissions of `/var/www/html/mailscanner/images` and `/var/www/html/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat).
+* Check the permissions of `/var/www/html/mailscanner/images` and `/var/www/html/mailscanner/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat). The web server user also needs write and read access to /var/www/html/mailscanner/temp.
 
 ```shell
  $ chown root:apache images
  $ chmod ug+rwx images
  $ chown root:apache images/cache
  $ chmod ug+rwx images/cache
+ $ chown root:apache temp
+ $ chmod g+rw temp
 ```
 
 * Create `conf.php` by copying `conf.php.example` and edit the values to suit, you will need to set `DB_USER` and `DB_PASS` to the MySQL user and password that you created earlier.
@@ -130,6 +132,18 @@ Quarantine Group = apache (this should be the same group as your web server)
 Quarantine Permissions = 0660
 ```
 
+If you are using Exim or Postfix you also have to adjust the following settings (replace `Debian-exim` with `postfix` when using postfix :
+```cfg
+Run As User = Debian-exim
+Run As Group = Debian-exim
+Incoming Work User = Debian-exim
+Incoming Work Group = mtagroup
+Incoming Work Permissions = 0660
+Quarantine User = Debian-exim
+Quarantine Group = mtagroup
+Quarantine Permissions = 0644
+```
+
 Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
 
 ### Integrate Blacklist/Whitelist (optional)
@@ -151,18 +165,18 @@ Is Definitely Spam = &SQLBlacklist
 
 Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
 
-Edit `/etc/MailScanner/spam.assassin.prefs.conf` and set:
+Edit `/etc/MailScanner/spamassassin.conf`(MailScanner v5) or `/etc/MailScanner/spam.assassin.prefs.conf`(MailScanner v4) and set:
 
 ```cfg
 bayes_path /etc/MailScanner/bayes/bayes
 bayes_file_mode 0660
 ```
 
-Create the 'new' bayes directory, make the directory owned by the same group as the web server user and make the directory setgid:
+Create the 'new' bayes directory, make the directory owned by a group that contains the web server user and the user your mailscanner is started with (e.g. mtagroup) and make the directory setgid:
 
 ```shell
  $ mkdir /etc/MailScanner/bayes
- $ chown root:apache /etc/MailScanner/bayes
+ $ chown root:mtagroup /etc/MailScanner/bayes
  $ chmod g+rws /etc/MailScanner/bayes
 ```
 
@@ -170,12 +184,17 @@ Copy the existing bayes databases and set the permissions:
 
 ```shell
  $ cp /root/.spamassassin/bayes_* /etc/MailScanner/bayes
- $ chown root:apache /etc/MailScanner/bayes/bayes_*
+ $ chown root:mtagroup /etc/MailScanner/bayes/bayes_*
  $ chmod g+rw /etc/MailScanner/bayes/bayes_*
 ```
 
 Test SpamAssassin to make sure that it is using the new databases correctly:
 
+MailScanner v5:
+```shell
+ $ spamassassin -D -p /etc/MailScanner/spamassassin.conf --lint
+```
+Or for MailScanner v4:
 ```shell
  $ spamassassin -D -p /etc/MailScanner/spam.assassin.prefs.conf --lint
 ```
@@ -183,7 +202,7 @@ Test SpamAssassin to make sure that it is using the new databases correctly:
 and you should see something like:
 
 ```
-debug: using "/etc/MailScanner/spam.assassin.prefs.conf" for user prefs file
+debug: using "/etc/MailScanner/spamassassin.conf" for user prefs file
 debug: bayes: 28821 tie-ing to DB file R/O /etc/MailScanner/bayes/bayes_toks
 debug: bayes: 28821 tie-ing to DB file R/O /etc/MailScanner/bayes/bayes_seen
 debug: bayes: found bayes db version 2
@@ -279,12 +298,16 @@ You can get MailWatch to watch your sendmail logs and store all message relay in
 
 * Add the table to the database
 
-```shell
- $ mysql -p mailscanner < tools/Postfix_relay/create_relay_postfix.sql
-```
-
-* Edit `mailwatch_relay.sh` and modify it to point to your php location, its configuration file and correct MailWatch installation path
+* Edit `mailwatch_relay.sh` and modify it to point to your php location and correct MailWatch installation path
 * Add `mailwatch_relay.sh` as an hourly cron job
+* Fix permissions of the postfix queue so that mailwatch can monitor them:
+
+``` shell
+ $ chown postfix.apache /var/spool/postfix/incoming/
+ $ chown postfix.apache /var/spool/postfix/hold
+ $ chmod g+r /var/spool/postfix/hold
+ $ chmod g+r /var/spool/postfix/incoming/
+```
 
 ### Optional steps for MailScanner Rule Editor
 
