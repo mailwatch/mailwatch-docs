@@ -2,11 +2,47 @@
 layout: page
 title: "Changelog"
 category: dev
-date: 2015-05-04 14:43:42
+date: 2017-01-09 11:58:42
 order: 1
 ---
 
 ## Changelog
+1.2.0 - RC4
+-----------
+ - Move to MySQLi PHP extension
+ - PHP 7 compatibility
+ - Use utf8mb4 on capable systems (MySQL >= 5.5.3)
+ - Fix geoip function dereclaration
+ - Warn on missing sa-learn binary
+ - Add SA_PREFS to list of SpamAssassin rules directory
+ - Improve session cookie security
+ - Upgrade pear packages
+ - Filter LDAP username and password before passing them to LDAP server
+ - Improve LDAP compatibility with server other than Active Directory
+ - Remove password change functionality for LDAP Domain Admin and User
+ - Permit LDAP login with password containing special characters
+ - Code cleanup
+ - Updated translations
+
+1.2.0 - RC3
+-----------
+ - Update postfix relay documentation (GH #320)
+ - Update JpGraph to 4.0.1 (GH #289)
+ - Fix Reports.php and Lists.php when used in languages other than English (GH #307, GH #288)
+ - Proper expansion multiple %var% references in MailScanner parameters (GH #311)
+ - Updated traslation
+ - Add HIDE_UNKNOWN config option (GH #240, GH #254)
+ - Add Autorelease feature (one click release of quarantined emails) (GH #260)
+ - Fix per user spam score defaults (GH #263)
+
+1.2.0 - RC2
+-----------
+ - Fix name collision in queries (GH #243)
+ - Fix loading of SpamAssassin rule description if it starts with a space (GH #242)
+ - Fix login bypass on LDAP introduced in RC1 (GH #246, GH #248)
+ - Improve rep_total_mail_by_date report (GH #249, GH #250, GH #251)
+ - Fix LDAP search for 'mail' prefix (GH #252)
+ - Try to not encode multiple times a string that is already UTF8 (GH #225)
 
 1.2.0 - RC1
 -----------
