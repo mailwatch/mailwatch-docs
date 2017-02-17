@@ -133,6 +133,7 @@ Quarantine Permissions = 0660
 ```
 
 If you are using Exim or Postfix you also have to adjust the following settings (replace `Debian-exim` with `postfix` when using postfix :
+
 ```cfg
 Run As User = Debian-exim
 Run As Group = Debian-exim
@@ -172,11 +173,11 @@ bayes_path /etc/MailScanner/bayes/bayes
 bayes_file_mode 0660
 ```
 
-Create the 'new' bayes directory, make the directory owned by a group that contains the web server user and the user your mailscanner is started with (e.g. mtagroup) and make the directory setgid:
+Create the 'new' bayes directory, make the directory owned by the main group of the web server (eg. apache or www-data; a supplemental group won't work) and the user your mailscanner is started with (eg. postfix/Debian-exim) and make the directory setgid:
 
 ```shell
  $ mkdir /etc/MailScanner/bayes
- $ chown root:mtagroup /etc/MailScanner/bayes
+ $ chown postfix:apache /etc/MailScanner/bayes
  $ chmod g+rws /etc/MailScanner/bayes
 ```
 
@@ -184,7 +185,7 @@ Copy the existing bayes databases and set the permissions:
 
 ```shell
  $ cp /root/.spamassassin/bayes_* /etc/MailScanner/bayes
- $ chown root:mtagroup /etc/MailScanner/bayes/bayes_*
+ $ chown postfix:apache /etc/MailScanner/bayes/bayes_*
  $ chmod g+rw /etc/MailScanner/bayes/bayes_*
 ```
 
