@@ -28,6 +28,7 @@ order: 1
  - Fixes for JpGraph imageantialias() and Debian/Ubuntu
  - Optimize css style
  - Fix for SQLBlackWhiteList.pm with utf8mb4
+ - Fix for MailWatch.pm for SpamAssassin reports
  - Provides required field validation for User Manager 
  - Added 'Clear' button in Bayes Info
  - Added Password reset functionality for Users
