@@ -18,21 +18,21 @@ order: 1
  - Use of InnoDB storage engine instead of myISAM
  - Improve LDAP compatibility with server other than Active Directory
  - Upgrade of JpGraph to v4.0.2
- - Add IPv6 and private network support (use IPSet.php)
- - Added the ability for domain admins to create/edit/delete user of the same domain
+ - Added IPv6 and private network support (use IPSet.php)
+ - Added the ability for domain admins to create/edit/delete User of the same Domain
  - Upgrade of HTMLPurifier to v4.8.0
  - Enhancement for MailScanner V5 compatibility
- - Reorganisation of Tools directory with new INSTALL and filnames
+ - Reorganisation of Tools directory with new INSTALL and filenames
  - Added filtering options for audit log
  - Fixes to avoid conflict with system installed PEAR packages
  - Fixes for JpGraph imageantialias() and Debian/Ubuntu
  - Optimize css style
- - Fix for SQLBlackWhiteList.pm with utf8mb4
- - Fix for MailWatch.pm for SpamAssassin reports
- - Provides required field validation for User Manager 
- - Added 'Clear' button in Bayes Info
+ - Fixes for SQLBlackWhiteList.pm with utf8mb4
+ - Fixes for MailWatch.pm for SpamAssassin reports
+ - Provides required field validation for User Manager page
+ - Added 'Clear' button in Bayes Info page
  - Added Password reset functionality for Users
- - Updated translations in many parts (finished for French and German)
+ - Updated translations in many parts (Up to date for French and German)
 
 1.2.0 - RC4
 -----------
