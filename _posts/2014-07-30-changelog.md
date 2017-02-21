@@ -12,7 +12,7 @@ order: 1
  - Refactoring to reduce code duplication and code smells
  - Many changes in database shema
  - Deleted spamscores table (no longer used)
- - New version of upgrade.php
+ - New version of upgrade.php (more checks for schema and conf.php)
  - Move page style blocks to style.css
  - Use MySQL utf8mb4_unicode_ci instead of utf8_unicode_ci for utf8mb4
  - Use of InnoDB storage engine instead of myISAM
@@ -27,11 +27,13 @@ order: 1
  - Fixes to avoid conflict with system installed PEAR packages
  - Fixes for JpGraph imageantialias() and Debian/Ubuntu
  - Optimize css style
- - Fixes for SQLBlackWhiteList.pm with utf8mb4
+ - Fixes for MailWatch.pm, SQLBlackWhiteList.pm and SQLSpamSettings.pm with utf8mb4
  - Fixes for MailWatch.pm for SpamAssassin reports
  - Provides required field validation for User Manager page
  - Added 'Clear' button in Bayes Info page
  - Added Password reset functionality for Users
+ - Added many constants in conf.php.example
+ - Layout changes and fixes in Reports
  - Updated translations in many parts (Up to date for French and German)
 
 1.2.0 - RC4
