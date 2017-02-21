@@ -118,7 +118,7 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
 Stop MailScanner
 
 ```shell
- $ service MailScanner stop
+ $ service mailscanner stop
 ```
 
 Next edit `/etc/MailScanner/MailScanner.conf` - you need to make sure that the following options are set:
@@ -214,7 +214,7 @@ debug: Score set 3 chosen.
 Start MailScanner up again.
 
 ```shell
- $ service MailScanner start && tail -f /var/log/maillog
+ $ service mailscanner start && tail -f /var/log/maillog
 ```
 
 You should see something like:
@@ -283,7 +283,8 @@ setup the cronjob:
 
 ```shell
  $ crontab -e
-
+```
+```
 # Run sendmail_queue.php each minute
 0-59 * * * * 	/usr/local/bin/mailwatch_sendmail_queue.php
 ```
@@ -339,7 +340,7 @@ Change file permissions so that we can update the rules and change group and rul
  $ chmod g+rw /etc/MailScanner/rules/*.rules
 ```
 
-See also the INSTALL docs in `tools/MailScanner_rule_editor/INSTALL` and `INSTALL` in `tools/Cron_jobs` directories.
+See also the INSTALL docs in `tools/MailScanner_rule_editor/INSTALL` and in `tools/Cron_jobs/INSTALL` directories.
 
 ### FINISHED!! (Phew!)
 
