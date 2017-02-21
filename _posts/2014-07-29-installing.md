@@ -2,13 +2,15 @@
 layout: page
 title: "Installation"
 category: doc
-date: 2014-07-29 18:35:27
+date: 2017-02-21
 order: 1
 ---
 
 ## Installation instructions
 
 MailWatch for MailScanner is developed on Debian 7 & Ubuntu 12.04, so these docs will reflect this and I will make note on anything that will be required to run on other distro's or operating systems.
+
+If you're upgrading from a previous version, read `UPGRADING`.
 
 ### Before you start
 
@@ -218,7 +220,7 @@ Start MailScanner up again.
 You should see something like:
 
 ```
-Jun 13 12:18:23 hoshi MailScanner[26388]: MailScanner E-Mail Virus Scanner version 4.20-3 starting...
+Jun 13 12:18:23 hoshi MailScanner[26388]: MailScanner E-Mail Virus Scanner version 5.03-3 starting...
 Jun 13 12:18:24 hoshi MailScanner[26388]: Config: calling custom init function MailWatchLogging
 Jun 13 12:18:24 hoshi MailScanner[26388]: Initialising database connection
 Jun 13 12:18:24 hoshi MailScanner[26388]: Finished initialising database connection
@@ -230,27 +232,31 @@ If you want to see the output of `MailScanner --lint` in Tools/MailScanner Lint 
 
 ### Database cleanup of maillog records
 
-add `db_clean.php` to `/etc/cron.daily/`
+copy `tools/Cron_jobs/mailwatch` to `/etc/cron.daily/`
 
-You will then to edit `conf.php` the RECORD_DAYS_TO_KEEP definition.
+copy `tools/Cron_jobs/mailwatch_db_clean.php` to `/usr/local/bin/`
 
-You will need to edit the `db_clean.php` to reflect the location of the `functions.php` file
+Verify if the file `mailwatch_db_clean.php` is executable. If not, use "chmod +x" to correct this problem.
+
+You need to edit conf.php and change the RECORD_DAYS_TO_KEEP definition.
 
 ### Quarantine Maintenance
 
-Remove the clean.quarantine cronjob configured with MailScanner.
+For MailScanner v4: Delete the clean.quarantine cron file.
 
-Edit and copy `quarantine_maint.sh` to `/etc/cron.daily/`
+For MailScanner v5: Change the variable for Quarantine Retention to "q_days=0" in /etc/MailScanner/defaults.
 
-You will then to edit `conf.php` the QUARANTINE_DAYS_TO_KEEP definition.
+copy `tools/Cron_jobs/mailwatch_quarantine_maint.php` to `/usr/local/bin/`
 
-You will need to edit the `quarantine_maint.php` to reflect the location of the `functions.php` file
+Verify if the file `mailwatch_db_clean.php` is executable. If not, use "chmod +x" to correct this problem.
+
+You need to edit in conf.php the QUARANTINE_DAYS_TO_KEEP variable.
 
 ### Quarantine Reporting
 
-Add `quarantine_report.php` to `/etc/cron.daily`
+copy `tools/Cron_jobs/mailwatch_quarantine_report.php` to `/usr/local/bin/`
 
-You will need to edit the `quarantine_report.php` to reflect the location of the `functions.php` file
+Verify if the file `mailwatch_db_clean.php` is executable. If not, use "chmod +x" to correct this problem.
 
 ### Test the MailWatch interface
 
@@ -263,51 +269,55 @@ Point your browser to http://your-server-hostname/mailscanner/ - you should be p
 - Update the GeoIP database
   Click on the 'Other' menu and select 'Update GeoIP database' and click 'Run Now'.
 
-### Optional steps for Sendmail
+### Optional steps for Exil or Sendmail
 
 #### Setup Sendmail Queue Watcher
 
 You can get MailWatch to watch and display your sendmail queue directories.
 
-Edit `tools/Sendmail_queue/mailq.php` to change the require line to point to the location of `functions.php`; copy `mailq.php` file to `/usr/local/bin` and setup the cronjob:
+copy the `tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php` file in `/usr/local/bin/`
+
+Verify if the file `mailwatch_sendmail_queue.php` is executable. If not, use "chmod +x" to correct this problem.
+
+setup the cronjob:
 
 ```shell
- $ cp tools/Sendmail_queue/mailq.php /usr/local/bin
  $ crontab -e
 
- 0-59 * * * * 	/usr/local/bin/mailq.php
+# Run sendmail_queue.php each minute
+0-59 * * * * 	/usr/local/bin/mailwatch_sendmail_queue.php
 ```
 
-Note: `mailq.php` re-creates all entries on each run, so for busy sites you will probably want to change this to run every 5 minutes or greater.
+Note: mailwatch_sendmail_queue.php re-creates all entries on each run, so for busy sites you will probably want to change this to run every 5 minutes or greater.
 
 #### Setup the Sendmail Relay Log watcher (optional)
 
-You can get MailWatch to watch your sendmail logs and store all message relay information which is then displayed on the 'Message Detail' page which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
+You can get MailWatch to watch your Sendmail MTA logs and store all message relay information which is then displayed on the 'Message Detail' page which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
+
+On Debian/Ubuntu:
 
 ```shell
- $ cp tools/Sendmail_relay/sendmail_relay.php /usr/local/bin
- $ cp tools/Sendmail_relay/sendmail_relay.init /etc/rc.d/init.d/
- $ chmod 777 /etc/rc.d/init.d/sendmail_relay.init
- $ /etc/rc.d/init.d/sendmail_relay.init start
- $ ln -s /etc/rc.d/init.d/sendmail_relay.init /etc/rc.2/S30sendmail_relay.init
+ $ cp tools/Sendmail_relay/mailwatch_sendmail_relay.php /usr/local/bin/.
+ $ cp tools/Sendmail_relay/mailwatch-sendmail-relay /etc/init.d/.
+ $ chmod +x /usr/local/bin/mailwatch_sendmail_relay.php
+ $ chmod +x /etc/init.d/mailwatch-sendmail-relay
+ $ /etc/init.d/mailwatch-sendmail-relay start
+ $ update-rc.d mailwatch-sendmail-relay defaults
 ```
 
 ### Optional steps for Postfix
 
 #### Adding Postfix relay information
 
-* Add the table to the database
+copy the 'mailwatch-postfix-relay' cron file into /etc/cron.hourly/
 
-* Edit `mailwatch_relay.sh` and modify it to point to your php location and correct MailWatch installation path
-* Add `mailwatch_relay.sh` as an hourly cron job
-* Fix permissions of the postfix queue so that mailwatch can monitor them:
+copy the `tools/Sendmail-Postfix_relay/mailwatch_postfix_relay.php` file in `/usr/local/bin/`
 
-``` shell
- $ chown postfix.apache /var/spool/postfix/incoming/
- $ chown postfix.apache /var/spool/postfix/hold
- $ chmod g+r /var/spool/postfix/hold
- $ chmod g+r /var/spool/postfix/incoming/
-```
+copy the `tools/Postfix_relay/mailwatch_mailscanner_relay.php` file in `/usr/local/bin/`
+
+Verify if the two files are executable. If not, use "chmod +x" to correct this problem.
+
+You will find more detail in tools/Postfix_relay/INSTALL.
 
 ### Optional steps for MailScanner Rule Editor
 
@@ -329,7 +339,7 @@ Change file permissions so that we can update the rules and change group and rul
  $ chmod g+rw /etc/MailScanner/rules/*.rules
 ```
 
-See also the INSTALL docs in `tools/MailScanner_rule_editor` and `tools/Cron_jobs` directories.
+See also the INSTALL docs in `tools/MailScanner_rule_editor/INSTALL` and `INSTALL` in `tools/Cron_jobs` directories.
 
 ### FINISHED!! (Phew!)
 
