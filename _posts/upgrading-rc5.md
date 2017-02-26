@@ -14,9 +14,9 @@ You can find new release on the frontpage of [MailWatch website](http://mailwatc
 
 Follow this procedure to make sure that the upgrade process will go as smooth as possible.
 
-- find a good downtime window, this process may take a while when run on big installations
+- Find a good downtime window. This process may take a while when run on big installations.
 
-- Stop MailScanner and the MTA (Postfix, Exim or Sendmail).
+- Stop MailScanner and the MTA (Exim, Postfix or Sendmail).
 
 - Move /var/www/html/mailscanner to /var/www/html/mailscanner-old and move the
   mailscanner directory from the tarball to /var/www/html/.
@@ -24,14 +24,17 @@ Follow this procedure to make sure that the upgrade process will go as smooth as
 - Copy conf.php.example to conf.php and edit the file to suit your configuration.
 
 - Replace MailWatch.pm, SQLBlackWhiteList.pm and SQLSpamSettings.pm with new version 
-  from MailScanner_perl_scripts and set database connection settings.
+  from MailScanner_perl_scripts and set database connection settings in MailWatch-DB.pm
+  if not already done.
 
 - Install the files in tools/Cron_jobs following INSTALL doc.
 
-- Install the file in tools/MailWatch_queue following INSTALL doc.
+- Install the file in tools/Sendmail-Exim_queue following INSTALL doc.
 
 - Install optional files in tools to suit your MTA (Postfix_relay or Sendmail_relay) 
   following INSTALL doc.
+  
+- Install the file mailwatch in tool/sudo following INSTALL doc.
 
 - Run upgrade.php to update database schema. Look for errors and correct them if needed.
 
