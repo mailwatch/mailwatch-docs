@@ -10,9 +10,9 @@ order: 0
 
 You must have a working MailScanner set-up and have running copies of:
 
-- MySQL
+- MySQL 5.5+ or MariaDB 10.x
 - Apache or nginx
-- PHP (with MySQL and GD support)
+- PHP 5.4+ (with MySQL and GD support)
 
 And for MailScanner CustomConfig modules to be able to use a database, you need:
 
