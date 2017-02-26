@@ -40,6 +40,7 @@ register_globals = Off
 magic_quotes_gpc = Off
 magic_quotes_runtime = Off
 session.auto_start = 0
+date.timezone = '<your time zone>'
 ```
 
 ## Installation
@@ -72,15 +73,17 @@ Edit MailWatch.pm and change the `$db_user` and `$db_pass` values (around line 4
 
 ### Create a MailWatch web user
 
+You need at minimum to create the administrator user 'admin' needed to access the MailWatch GUI and to handle default Spam Setting used by SQLSpamSettings.pm script.
+
 ```shell
  $ mysql mailscanner -u mailwatch -p
 ```
 ```sql
 Enter password: ******
-mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>'), fullname = '<name>', type = 'A'
+mysql> INSERT INTO users SET username = 'admin', password = MD5('<password>'), fullname = '<name>', type = 'A'
 ```
 
-### Install & Configure MailWatch
+### Install and Configure MailWatch
 
 * Move the `mailscanner` directory to the web server's root.
 
@@ -121,29 +124,115 @@ Stop MailScanner
  $ service mailscanner stop
 ```
 
-Next edit `/etc/MailScanner/MailScanner.conf` - you need to make sure that the following options are set:
+Next create the file `/etc/MailScanner/00_mailwatch.conf` - Copy the following options in it:
+
+For Exim:
 
 ```cfg
+# Example config for exim  /etc/MailScanner/conf.d/00_mailwatch.conf
+Run As User = Debian-exim
+Run As Group = Debian-exim
+MTA = exim
+Incoming Work User = Debian-exim
+Incoming Work Group = mtagroup
+Incoming Work Permissions = 0660
+Detailed Spam Reports = yes
+Quarantine Whole Message = yes
+Quarantine Whole Messages As Queue Files = no
+Include Scores In SpamAssassin Report = yes
+Quarantine User = Debian-exim
+Quarantine Group = mtagroup
+Quarantine Permissions = 0644
 Always Looked Up Last = &MailWatchLogging
+Is Definitely Not Spam = &SQLWhitelist
+Is Definitely Spam = &SQLBlacklist
+Incoming Queue Dir = /var/spool/exim4/input
+Outgoing Queue Dir = /var/spool/exim4_outgoing/input
+SpamAssassin Local State Dir = /var/lib/spamassassin
+
+Sendmail = /usr/sbin/exim4
+Sendmail2 = /usr/sbin/exim4 -DOUTGOING
+```
+
+Next modify the file `/etc/default/exim4` - Modify the following options according to this:
+
+```cfg
+# /etc/default/exim4
+EX4DEF_VERSION=''
+
+# 'combined' -	 one daemon running queue and listening on SMTP port
+# 'no'       -	 no daemon running the queue
+# 'separate' -	 two separate daemons
+# 'ppp'      -   only run queue with /etc/ppp/ip-up.d/exim4.
+# 'nodaemon' - no daemon is started at all.
+# 'queueonly' - only a queue running daemon is started, no SMTP listener.
+# setting this to 'no' will also disable queueruns from /etc/ppp/ip-up.d/exim4
+QUEUERUNNER='separate'
+# how often should we run the queue
+QUEUEINTERVAL='15m'
+# options common to quez-runner and listening daemon
+COMMONOPTIONS=''
+# more options for the daemon/process running the queue (applies to the one
+# started in /etc/ppp/ip-up.d/exim4, too.
+QUEUERUNNEROPTIONS='-DOUTGOING'
+# special flags given to exim directly after the -q. See exim(8)
+QFLAGS=''
+# Options for the SMTP listener daemon. By default, it is listening on
+# port 25 only. To listen on more ports, it is recommended to use
+# -oX 25:587:10025 -oP /var/run/exim4/exim.pid
+SMTPLISTENEROPTIONS='-odq'
+```
+
+Next create the file `/etc/exim4/conf.d/main/01_mailscanner_config` - Copy the following options in it:
+
+```cfg
+# Config for MailScanner Gateway
+# conf.d/main/01_mailscanner_config
+
+.ifdef OUTGOING
+
+# outgoing queue where MailScanner places scanned messages for exim to
+# deliver
+    SPOOLDIR = /var/spool/exim4_outgoing
+    log_file_path = /var/log/exim4_outgoing/%slog
+.else
+
+# incoming queue where exim places message for MailScanner to scan
+    queue_only = true
+    queue_only_override = false
+    SPOOLDIR = /var/spool/exim4
+.endif
+```
+
+For Postfix:
+
+```cfg
+# Example config for postfix /etc/MailScanner/conf.d/00_mailwatch.conf
+Run As User = postfix
+Run As User = mtagroup
+MTA = postfix
+Incoming Work User = postfix
+Incoming Work Group = mtagroup
+Incoming Work Permissions = 0660
 Detailed Spam Report = yes
 Quarantine Whole Message = yes
 Quarantine Whole Messages As Queue Files = no
 Include Scores In SpamAssassin Report = yes
-Quarantine User = root
-Quarantine Group = apache (this should be the same group as your web server)
-Quarantine Permissions = 0660
+Quarantine User = postfix
+Quarantine Group = mtagroup
+Quarantine Permissions = 0664
+Always Looked Up Last = &MailWatchLogging
+Is Definitely Not Spam = &SQLWhitelist
+Is Definitely Spam = &SQLBlacklist
+Incoming Queue Dir = /var/spool/postfix/hold
+Outgoing Queue Dir = /var/spool/postfix/incoming
+SpamAssassin User State Dir = /var/spool/MailScanner/spamassassin
 ```
 
-If you are using Exim or Postfix you also have to adjust the following settings (replace `Debian-exim` with `postfix` when using postfix :
+Next create the file `/etc/postfix/header_checks` - Copy the following options in it:
+
 ```cfg
-Run As User = Debian-exim
-Run As Group = Debian-exim
-Incoming Work User = Debian-exim
-Incoming Work Group = mtagroup
-Incoming Work Permissions = 0660
-Quarantine User = Debian-exim
-Quarantine Group = mtagroup
-Quarantine Permissions = 0644
+/^Received:/ HOLD
 ```
 
 Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
