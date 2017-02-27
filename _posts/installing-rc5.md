@@ -2,7 +2,7 @@
 layout: page
 title: "Installation"
 category: doc
-date: 2017-02-23
+date: 2017-02-27
 order: 1
 ---
 
@@ -183,7 +183,7 @@ QFLAGS=''
 SMTPLISTENEROPTIONS='-odq'
 ```
 
-Next create the file `/etc/exim4/conf.d/main/01_mailscanner_config` - Copy the following options in it:
+Next create the file `/etc/exim4/conf.d/main/01_mailscanner_config` and copy the following options in it:
 
 ```cfg
 # Config for MailScanner Gateway
@@ -204,7 +204,7 @@ Next create the file `/etc/exim4/conf.d/main/01_mailscanner_config` - Copy the f
 .endif
 ```
 
-For Postfix:
+For Postfix MTA:
 
 ```cfg
 # Example config for postfix /etc/MailScanner/conf.d/00_mailwatch.conf
@@ -229,7 +229,7 @@ Outgoing Queue Dir = /var/spool/postfix/incoming
 SpamAssassin User State Dir = /var/spool/MailScanner/spamassassin
 ```
 
-Next create the file `/etc/postfix/header_checks` - Copy the following options in it:
+Next create the file `/etc/postfix/header_checks` and copy the following options in it:
 
 ```cfg
 /^Received:/ HOLD
@@ -321,9 +321,11 @@ If you want to see the output of `MailScanner --lint` in Tools/MailScanner Lint 
 
 ### Database cleanup of maillog records
 
-copy `tools/Cron_jobs/mailwatch` to `/etc/cron.daily/`
+Copy `tools/Cron_jobs/mailwatch` to `/etc/cron.daily/`
 
-copy `tools/Cron_jobs/mailwatch_db_clean.php` to `/usr/local/bin/`
+You can edit `/etc/cron.daily/mailwatch` t fit your need.
+
+Copy `tools/Cron_jobs/mailwatch_db_clean.php` to `/usr/local/bin/`
 
 Verify if the file `mailwatch_db_clean.php` is executable. If not, use "chmod +x" to correct this problem.
 
@@ -335,7 +337,7 @@ For MailScanner v4: Delete the clean.quarantine cron file.
 
 For MailScanner v5: Change the variable for Quarantine Retention to "q_days=0" in /etc/MailScanner/defaults.
 
-copy `tools/Cron_jobs/mailwatch_quarantine_maint.php` to `/usr/local/bin/`
+Copy `tools/Cron_jobs/mailwatch_quarantine_maint.php` to `/usr/local/bin/`
 
 Verify if the file `mailwatch_db_clean.php` is executable. If not, use "chmod +x" to correct this problem.
 
@@ -343,9 +345,20 @@ You need to edit in conf.php the QUARANTINE_DAYS_TO_KEEP variable.
 
 ### Quarantine Reporting
 
-copy `tools/Cron_jobs/mailwatch_quarantine_report.php` to `/usr/local/bin/`
+Copy `tools/Cron_jobs/mailwatch_quarantine_report.php` to `/usr/local/bin/`
 
 Verify if the file `mailwatch_db_clean.php` is executable. If not, use "chmod +x" to correct this problem.
+
+### sudo file for MailWatch
+
+Edit `mailwatch` file to match web server user (www-data, apache or other) and MTA Queue
+  and change executable path if needed.
+  
+Copy edited `mailwatch` file in /etc/sudoers.d/
+
+Set permission to 0440 (`chmod 440 /etc/sudoers.d/mailwatch`)
+
+This instruction should work in Debian 6 and 7, Ubuntu 12.04 and newer, RHEL 5 and 6 and CentOS 5 and 6.
 
 ### Test the MailWatch interface
 
@@ -364,11 +377,11 @@ Point your browser to http://your-server-hostname/mailscanner/ - you should be p
 
 You can get MailWatch to watch and display your sendmail queue directories.
 
-copy the `tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php` file in `/usr/local/bin/`
+Copy the `tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php` file in `/usr/local/bin/`
 
 Verify if the file `mailwatch_sendmail_queue.php` is executable. If not, use "chmod +x" to correct this problem.
 
-setup the cronjob:
+Setup the cronjob:
 
 ```shell
  $ crontab -e
@@ -399,11 +412,11 @@ On Debian/Ubuntu:
 
 #### Adding Postfix relay information
 
-copy the 'mailwatch-postfix-relay' cron file into /etc/cron.hourly/
+Copy the 'mailwatch-postfix-relay' cron file into /etc/cron.hourly/
 
-copy the `tools/Sendmail-Postfix_relay/mailwatch_postfix_relay.php` file in `/usr/local/bin/`
+Copy the `tools/Sendmail-Postfix_relay/mailwatch_postfix_relay.php` file in `/usr/local/bin/`
 
-copy the `tools/Postfix_relay/mailwatch_mailscanner_relay.php` file in `/usr/local/bin/`
+Copy the `tools/Postfix_relay/mailwatch_mailscanner_relay.php` file in `/usr/local/bin/`
 
 Verify if the two files are executable. If not, use "chmod +x" to correct this problem.
 
