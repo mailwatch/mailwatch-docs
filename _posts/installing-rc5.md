@@ -66,10 +66,17 @@ mysql> GRANT FILE ON *.* TO mailwatch@localhost IDENTIFIED BY '<password>';
 mysql> FLUSH PRIVILEGES;
 ```
 
-Edit MailWatch.pm and change the `$db_user` and `$db_pass` values (around line 42) accordingly and move `MailWatch.pm` to:
+Edit MailWatch-DB.pm and change the `$db_user` and `$db_pass` values to fit your need and move `MailWatch-DB.pm` to:
 
-  * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
-  * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
+  * MailScanner v4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
+  
+  * MailScanner v4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
+
+Copy MailWatch.pm to:
+
+  * MailScanner v4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
+  
+  * MailScanner v4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
 
 ### Create a MailWatch web user
 
@@ -126,7 +133,7 @@ Stop MailScanner
 
 Next create the file `/etc/MailScanner/00_mailwatch.conf` - Copy the following options in it:
 
-For Exim:
+Setup for Exim:
 
 ```cfg
 # Example config for exim  /etc/MailScanner/conf.d/00_mailwatch.conf
@@ -144,8 +151,6 @@ Quarantine User = Debian-exim
 Quarantine Group = mtagroup
 Quarantine Permissions = 0644
 Always Looked Up Last = &MailWatchLogging
-Is Definitely Not Spam = &SQLWhitelist
-Is Definitely Spam = &SQLBlacklist
 Incoming Queue Dir = /var/spool/exim4/input
 Outgoing Queue Dir = /var/spool/exim4_outgoing/input
 SpamAssassin Local State Dir = /var/lib/spamassassin
@@ -204,7 +209,7 @@ Next create the file `/etc/exim4/conf.d/main/01_mailscanner_config` and copy the
 .endif
 ```
 
-For Postfix MTA:
+Setup for Postfix:
 
 ```cfg
 # Example config for postfix /etc/MailScanner/conf.d/00_mailwatch.conf
@@ -222,8 +227,6 @@ Quarantine User = postfix
 Quarantine Group = mtagroup
 Quarantine Permissions = 0664
 Always Looked Up Last = &MailWatchLogging
-Is Definitely Not Spam = &SQLWhitelist
-Is Definitely Spam = &SQLBlacklist
 Incoming Queue Dir = /var/spool/postfix/hold
 Outgoing Queue Dir = /var/spool/postfix/incoming
 SpamAssassin User State Dir = /var/spool/MailScanner/spamassassin
@@ -238,14 +241,14 @@ Next create the file `/etc/postfix/header_checks` and copy the following options
 Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
 
 ### Integrate Blacklist/Whitelist (optional)
-With MailWatch you can manage whitelist and blacklist from the web interface.
 
-Edit `SQLBlackWhiteList.pm` file and change the connection string in the `CreateList` subroutine (lines 103-106) to match `MailWatch.pm`.
+With MailWatch you can manage whitelist and blacklist from the web interface.
 
 Copy `SQLBlackWhiteList.pm` to:
 
-  * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
-  * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
+  * MailScanner v4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
+  
+  * MailScanner v4.86.1 or v5: `/usr/share/MailScanner/perl/custom`
 
 and in `MailScanner.conf` set:
 
@@ -349,7 +352,7 @@ Copy `tools/Cron_jobs/mailwatch_quarantine_report.php` to `/usr/local/bin/`
 
 Verify if the file `mailwatch_db_clean.php` is executable. If not, use "chmod +x" to correct this problem.
 
-### sudo file for MailWatch
+### Sudo file for MailWatch
 
 Edit `mailwatch` file to match web server user (www-data, apache or other) and MTA Queue
   and change executable path if needed.
