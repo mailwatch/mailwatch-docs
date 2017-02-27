@@ -44,6 +44,6 @@ Enjoy your upgraded MailWatch!
 
 ATTENTION:
 
-Several files have changed their name and location in MailWatch 1.2.0
-Particularly the PHP files that are launched in cron and the Init script files.
+Several files have changed their name and location in MailWatch 1.2.0, 
+particularly the PHP files that are launched in cron and the Init script files.
 Please read the documentation carefully to remove old files during the upgrade.
