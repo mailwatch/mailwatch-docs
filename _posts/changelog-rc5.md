@@ -2,7 +2,7 @@
 layout: page
 title: "Changelog"
 category: dev
-date: 2017-02-23 11:58:42
+date: 2017-03-02
 order: 1
 ---
 
@@ -17,8 +17,10 @@ order: 1
  - Added IPv6 and private network support (use IPSet.php)
  - Added Password reset functionality for Users in Login page
  - Added SQL query error check in dbquery() function
+ - Added SQLBlackWhiteList and SQLSpamSettings timer config in 00-MailWatch-conf.pm
  - Added the ability for domain admins to create/edit/delete User of the same Domain
  - Added the possibility to 'Clear' Bayes database in Bayes Info page
+ - Added timer in SQLSpamSettings
  - Databse call now compatible with PHP 7 (mysqli)
  - Deleted spamscores table no longer used
  - Enhancement for MailScanner V5 compatibility
