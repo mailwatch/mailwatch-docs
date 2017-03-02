@@ -2,7 +2,7 @@
 layout: page
 title: "Upgrading"
 category: doc
-date: 2017-02-23 17:47:00
+date: 2017-03-02
 order: 2
 ---
 
@@ -24,7 +24,7 @@ Follow this procedure to make sure that the upgrade process will go as smooth as
 - Copy conf.php.example to conf.php and edit the file to suit your configuration.
 
 - Replace MailWatch.pm, SQLBlackWhiteList.pm and SQLSpamSettings.pm with new version 
-  from MailScanner_perl_scripts and set database connection settings in MailWatch-DB.pm
+  from MailScanner_perl_scripts and set database connection settings in 00-MailWatch-conf.pm
   if not already done.
 
 - Install the files in tools/Cron_jobs following INSTALL doc.
