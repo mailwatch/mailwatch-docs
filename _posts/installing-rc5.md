@@ -66,7 +66,7 @@ mysql> GRANT FILE ON *.* TO mailwatch@localhost IDENTIFIED BY '<password>';
 mysql> FLUSH PRIVILEGES;
 ```
 
-Edit MailWatch-DB.pm and change the `$db_user` and `$db_pass` values to fit your need and move `MailWatch-DB.pm` to:
+Edit 00-MailWatch-conf.pm and change the `$db_user` and `$db_pass` values to fit your need and move `00-MailWatch-conf.pm` to:
 
   * MailScanner v4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
   
