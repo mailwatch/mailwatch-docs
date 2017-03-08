@@ -2,7 +2,7 @@
 layout: page
 title: "Changelog"
 category: dev
-date: 2017-03-02
+date: 2017-03-08
 order: 1
 ---
 
@@ -17,7 +17,7 @@ order: 1
  - Added IPv6 and private network support (use IPSet.php)
  - Added Password reset functionality for Users in Login page
  - Added SQL query error check in dbquery() function
- - Added SQLBlackWhiteList and SQLSpamSettings timer config in 00-MailWatch-conf.pm
+ - Added SQLBlackWhiteList and SQLSpamSettings timer config in 00MailWatchConf.pm
  - Added the ability for domain admins to create/edit/delete User of the same Domain
  - Added the possibility to 'Clear' Bayes database in Bayes Info page
  - Added timer in SQLSpamSettings
@@ -33,7 +33,7 @@ order: 1
  - Layout changes and fixes in Reports
  - More details for 'Load Average' in GUI
  - Moved $refresh_time from SQLBlackWhiteList.pm in MailWatch-DB.pm
- - Moved MailWatch .pm files database settings to separate file 00-MailWatch-conf.pm
+ - Moved MailWatch .pm files database settings to separate file 00MailWatchConf.pm
  - Moved page style blocks to style.css and optimized some CSS style
  - New version of upgrade.php (more checks for DB schema and conf.php)
  - Optimized database schema for utf8mb4 and InnoDB
