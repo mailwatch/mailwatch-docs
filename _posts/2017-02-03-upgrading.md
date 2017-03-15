@@ -17,9 +17,9 @@ Follow this procedure to make sure that the upgrade process will go as smooth as
 * find a good downtime window, this process may take a while when run on big installations
 * create a backup of your MailWatch database, safety first!
 * make a copy of `conf.php` file
-* replace all old files with the ones from new release
+* replace all old web and cron files with the ones from new release
 * copy `conf.php` in `mailscanner` directory
 * run `php upgrade.php`
 * eventually adjust `conf.php` with new configuration entries that `upgrade.php` warned you about
-* copy and edit `MailWatch.pm`, `SQLBlackWhiteList.pm` and `SQLSpamSettings.pm` to Mailscanner custom function directory
+* copy `MailWatch.pm`, `SQLBlackWhiteList.pm`, `SQLSpamSettings.pm` and `00-MailWatch-conf.pm` to Mailscanner custom function directory and edit `00-MailWatch-conf.pm` to match the sql settings
 * enjoy your upgraded MailWatch!
