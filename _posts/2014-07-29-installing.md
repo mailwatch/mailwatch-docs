@@ -133,6 +133,7 @@ Quarantine Permissions = 0660
 ```
 
 If you are using Exim or Postfix you also have to adjust the following settings (replace `Debian-exim` with `postfix` when using postfix :
+
 ```cfg
 Run As User = Debian-exim
 Run As Group = Debian-exim
@@ -172,11 +173,11 @@ bayes_path /etc/MailScanner/bayes/bayes
 bayes_file_mode 0660
 ```
 
-Create the 'new' bayes directory, make the directory owned by a group that contains the web server user and the user your mailscanner is started with (e.g. mtagroup) and make the directory setgid:
+Create the 'new' bayes directory, make the directory owned by the main group of the web server (eg. apache or www-data; a supplemental group won't work) and the user your mailscanner is started with (eg. postfix/Debian-exim) and make the directory setgid:
 
 ```shell
  $ mkdir /etc/MailScanner/bayes
- $ chown root:mtagroup /etc/MailScanner/bayes
+ $ chown postfix:apache /etc/MailScanner/bayes
  $ chmod g+rws /etc/MailScanner/bayes
 ```
 
@@ -184,7 +185,7 @@ Copy the existing bayes databases and set the permissions:
 
 ```shell
  $ cp /root/.spamassassin/bayes_* /etc/MailScanner/bayes
- $ chown root:mtagroup /etc/MailScanner/bayes/bayes_*
+ $ chown postfix:apache /etc/MailScanner/bayes/bayes_*
  $ chmod g+rw /etc/MailScanner/bayes/bayes_*
 ```
 
@@ -330,6 +331,30 @@ Change file permissions so that we can update the rules and change group and rul
 ```
 
 See also the INSTALL docs in `tools/MailScanner_rule_editor` and `tools/Cron_jobs` directories.
+
+### Optional steps to use LDAP directory for user management
+
+You can use a LDAP directory to authenticate users. `define('USE_LDAP', true);` will enable the backend and will connect to the ldap server `LDAP_HOST` on the port `LDAP_PORT` and binds to it by using `LDAP_USER` and `LDAP_PASS` as credentials. That user must have read access to the users login name and attributes that you are using for the filter.
+
+MailWatch will search users that are allowed to use it by using `LDAP_DN` as search base and `LDAP_FILTER` to filter the ldap entries to get the matching users login name. In the `LDAP_FILTER` you can use `%s` as replacement for the users login name that he entered on the login page of MailWatch.
+
+From this search result MailWatch uses the ldap attribute defined by `LDAP_USERNAME_FIELD` as login name to bind to the server for authentication. This login name can be extended by a prefix (`LDAP_BIND_PREFIX`) and suffix (`LDAP_BIND_SUFFIX`). The user then is authenticated with his password and this aggregated login name. Additionally you can define the ldap attribute containing the users mail address with `LDAP_EMAIL_FIELD` which will be used to only show the user mails that are related to his mail address as recipient or sender.
+
+Settings for Active Directory:
+```
+define('LDAP_FILTER', 'mail=%s');
+define('LDAP_EMAIL_FIELD', 'mail');
+define('LDAP_USERNAME_FIELD', 'userprincipalname');
+```
+<!--%TODO check openldap settings-->
+Example for OpenLDAP:
+```
+define('LDAP_FILTER', 'mail=%s'); 
+define('LDAP_EMAIL_FIELD', 'mail');
+define('LDAP_USERNAME_FIELD', 'cn');
+define('LDAP_BIND_PREFIX', 'cn=');
+define('LDAP_BIND_SUFFIX', ',dc=example,dc=com');
+```
 
 ### FINISHED!! (Phew!)
 
