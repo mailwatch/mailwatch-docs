@@ -2,7 +2,7 @@
 layout: page
 title: "Upgrading"
 category: doc
-date: 2017-02-03 17:47:00
+date: 2017-03-22 17:47:00
 order: 2
 ---
 
@@ -21,5 +21,5 @@ Follow this procedure to make sure that the upgrade process will go as smooth as
 * copy `conf.php` in `mailscanner` directory
 * run `php upgrade.php`
 * eventually adjust `conf.php` with new configuration entries that `upgrade.php` warned you about
-* copy `MailWatch.pm`, `SQLBlackWhiteList.pm`, `SQLSpamSettings.pm` and `00MailWatch-conf.pm` to Mailscanner custom function directory and edit `00MailWatch-conf.pm` to match the sql settings
+* copy `MailWatch.pm`, `SQLBlackWhiteList.pm`, `SQLSpamSettings.pm` and `MailWatchConf.pm` to Mailscanner custom function directory and edit `MailWatchConf.pm` to match the sql settings
 * enjoy your upgraded MailWatch!
