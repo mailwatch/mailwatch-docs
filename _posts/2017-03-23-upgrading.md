@@ -3,7 +3,7 @@ layout: page
 title: "Upgrading"
 category: install
 date: 2017-03-23 00:00:00
-order: 2
+order: 3
 ---
 
 ## Upgrade instructions
