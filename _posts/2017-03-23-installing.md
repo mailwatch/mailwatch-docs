@@ -92,6 +92,7 @@ MailScanner CustomFunctions path depends on MailScanner version:
   * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
 
 Symlink the others .pm files in the same MailScanner CustomFunctions directory:
+
 ```shell
  $ ln -s /opt/mailwatch/MailScanner_perl_scripts/MailWatch.pm /usr/share/MailScanner/perl/custom
  $ ln -s /opt/mailwatch/MailScanner_perl_scripts/SQLBlackWhiteList.pm /usr/share/MailScanner/perl/custom
@@ -111,7 +112,9 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
 
 ### Install & Configure MailWatch
 
-* Check the permissions of `/opt/mailwatch/mailscanner/images` and `/opt/mailwatch/mailscanner/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat). The web server user also needs write and read access to /opt/mailwatch/mailscanner/temp.
+#### Checking permissions
+
+Check the permissions of `/opt/mailwatch/mailscanner/images` and `/opt/mailwatch/mailscanner/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat). The web server user also needs write and read access to /opt/mailwatch/mailscanner/temp.
 
 ```shell
  $ chown root:apache images
@@ -122,21 +125,23 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
  $ chmod g+rw temp
 ```
 
-* Create `conf.php` by copying `conf.php.example` and edit the values to suit, you will need to set `DB_USER` and `DB_PASS` to the MySQL user and password that you created earlier.
-
-    Note that MailWatch 1.0 and later can use the quarantine more effectively when used with MailScanner version 4.43 or later as MailScanner developers added some code for MailWatch to keep track of messages quarantined by using a flag in the maillog table.
-
-    This means that MailWatch 1.0 is *much* faster when you have a large quarantine directory.  The new quarantine report requires the use of the new functionality - so you must upgrade if you want to run this.
-    The new quarantine flag is used by default and you must disable the clean.quarantine script supplied by MailScanner and use the new quarantine_maint.php script in the tools directory instead.
-
-    To clean the quarantine - set `QUARANTINE_DAYS_TO_KEEP` in conf.php and run './quarantine_maint --clean'.  This should then be run daily from cron.
-    If you are still using MailScanner 4.42 or older, updating your installation is highly recommanded; if you can't update you need to set the `QUARANTINE_USE_FLAG` to false in conf.php and use the clean.quarantine script supplied by MailScanner.
+#### Edit conf.php
+Create `conf.php` by copying `conf.php.example` and edit the values to suit, you will need to set `DB_USER` and `DB_PASS` to the MySQL user and password that you created earlier.
 
 ```shell
  $ cp conf.php.example conf.php
 ```
 
-* Configure your webserver  
+Note that MailWatch 1.0 and later can use the quarantine more effectively when used with MailScanner version 4.43 or later as MailScanner developers added some code for MailWatch to keep track of messages quarantined by using a flag in the maillog table.
+
+This means that MailWatch 1.0 is *much* faster when you have a large quarantine directory.  The new quarantine report requires the use of the new functionality - so you must upgrade if you want to run this.
+The new quarantine flag is used by default and you must disable the clean.quarantine script supplied by MailScanner and use the new quarantine_maint.php script in the tools directory instead.
+
+To clean the quarantine - set `QUARANTINE_DAYS_TO_KEEP` in conf.php and run './quarantine_maint --clean'.  This should then be run daily from cron.
+If you are still using MailScanner 4.42 or older, updating your installation is highly recommanded; if you can't update you need to set the `QUARANTINE_USE_FLAG` to false in conf.php and use the clean.quarantine script supplied by MailScanner.
+
+
+#### Configure webserver
 
 It's recommended to setup a virtualhost to manage MailWatch; this setup depends on your webserver of choice.
 Below you'll find basic config example for apache and nginx, adapt them to your prefered setup (ssl, additional header, and so on).
