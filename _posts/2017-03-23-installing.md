@@ -1,8 +1,8 @@
 ---
 layout: page
 title: "Installation"
-category: doc
-date: 2014-07-29 18:35:27
+category: install
+date: 2017-03-23 00:00:00
 order: 1
 ---
 
@@ -42,7 +42,29 @@ session.auto_start = 0
 
 ## Installation
 
-All commands below should be run as the 'root'.
+All commands below should be run as 'root' user.
+
+### Installing MailWatch
+There are 2 methods to install MailWatch: zip install and git cloning.
+
+In the following instructions `/opt/mailwatch` is used as base directory for MailWatch Install, if you prefer you can use another directory that you like.
+
+#### Zip install
+
+```shell
+mkdir /opt/mailwatch
+cd /opt/mailwatch
+wget https://github.com/mailwatch/1.2.0/archive/v1.2.0.zip
+unzip v1.2.0.zip -d /opt/mailwatch
+rm v1.2.0.zip
+```
+
+#### Git cloning
+```shell
+mkdir /opt/mailwatch
+cd /opt/mailwatch
+git clone --depth=1 https://github.com/mailwatch/1.2.0.git .
+```
 
 ### Create the database
 
@@ -50,7 +72,7 @@ All commands below should be run as the 'root'.
  $ mysql < create.sql
 ```
 
-NOTE: you will need to modify the above as necessary for your system if you have a root password for your MySQL database (recommended!).
+NOTE: you will need to modify the above as necessary for your system if you have a root password for your MySQL database (which is highly recommended!).
 
 ### Create a MySQL user and password & Set-up MailScanner for SQL logging
 
@@ -63,10 +85,19 @@ mysql> GRANT FILE ON *.* TO mailwatch@localhost IDENTIFIED BY '<password>';
 mysql> FLUSH PRIVILEGES;
 ```
 
-Edit MailWatch.pm and change the `$db_user` and `$db_pass` values (around line 42) accordingly and move `MailWatch.pm` to:
+Copy `MailWatchConf.pm` in MailScanner CustomFunctions directory and edit it to match your database settings.
+MailScanner CustomFunctions path depends on MailScanner version:
 
   * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
   * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
+
+Symlink the others .pm files in the same MailScanner CustomFunctions directory:
+```shell
+ $ ln -s /opt/mailwatch/MailScanner_perl_scripts/MailWatch.pm /usr/share/MailScanner/perl/custom
+ $ ln -s /opt/mailwatch/MailScanner_perl_scripts/SQLBlackWhiteList.pm /usr/share/MailScanner/perl/custom
+ $ ln -s /opt/mailwatch/MailScanner_perl_scripts/SQLSpamSettings.pm /usr/share/MailScanner/perl/custom
+```
+Symlinking instead of copying assure a painless upgrade in the future.
 
 ### Create a MailWatch web user
 
@@ -80,13 +111,7 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
 
 ### Install & Configure MailWatch
 
-* Move the `mailscanner` directory to the web server's root.
-
-```shell
- $ mv mailscanner /var/www/html/
-```
-
-* Check the permissions of `/var/www/html/mailscanner/images` and `/var/www/html/mailscanner/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat). The web server user also needs write and read access to /var/www/html/mailscanner/temp.
+* Check the permissions of `/opt/mailwatch/mailscanner/images` and `/opt/mailwatch/mailscanner/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat). The web server user also needs write and read access to /opt/mailwatch/mailscanner/temp.
 
 ```shell
  $ chown root:apache images
@@ -109,6 +134,58 @@ mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>
 
 ```shell
  $ cp conf.php.example conf.php
+```
+
+* Configure your webserver  
+
+It's recommended to setup a virtualhost to manage MailWatch; this setup depends on your webserver of choice.
+Below you'll find basic config example for apache and nginx, adapt them to your prefered setup (ssl, additional header, and so on).
+
+#### nginx
+```apacheconfig
+server {
+    listen 80 default_server;
+    server_name mailwatch.example.org;
+
+    access_log /var/log/nginx/mailwatch/access.log main_ext;
+    error_log /var/log/nginx/mailwatch/error.log warn;
+
+    root /opt/mailwatch/mailscanner;
+
+    location / {
+        index  index.php;
+    }
+    
+    location ~* \.php$ {
+        fastcgi_index   index.php;
+        fastcgi_pass    unix:/var/run/php5-fpm.sock;
+        include         fastcgi.conf;
+        fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+    }
+}
+```
+
+#### Apache
+```apacheconfig
+<virtualhost *:80>
+    ServerName mailwatch.example.org
+    DocumentRoot "/opt/mailwatch/mailscanner"
+    ErrorLog "/var/log/apache/mailwatch/error.log"
+    CustomLog "/var/log/apache/mailwatch/access.log" combined
+
+    <Directory />
+        # Apache 2.4
+        Require all granted
+        
+        # Apache 2.2
+        #Order allow,deny
+        #Allow from all
+    </Directory>
+
+    AddType application/x-httpd-php .php
+    DirectoryIndex index.php
+</virtualhost>
 ```
 
 ### Set-up MailScanner
@@ -147,24 +224,7 @@ Quarantine Permissions = 0644
 
 Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
 
-### Integrate Blacklist/Whitelist (optional)
-With MailWatch you can manage whitelist and blacklist from the web interface.
-
-Edit `SQLBlackWhiteList.pm` file and change the connection string in the `CreateList` subroutine (lines 103-106) to match `MailWatch.pm`.
-
-Copy `SQLBlackWhiteList.pm` to:
-
-  * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
-  * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
-
-and in `MailScanner.conf` set:
-
-```cfg
-Is Definitely Not Spam = &SQLWhitelist
-Is Definitely Spam = &SQLBlacklist
-```
-
-Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
+### Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
 
 Edit `/etc/MailScanner/spamassassin.conf`(MailScanner v5) or `/etc/MailScanner/spam.assassin.prefs.conf`(MailScanner v4) and set:
 
@@ -192,10 +252,12 @@ Copy the existing bayes databases and set the permissions:
 Test SpamAssassin to make sure that it is using the new databases correctly:
 
 MailScanner v5:
+
 ```shell
  $ spamassassin -D -p /etc/MailScanner/spamassassin.conf --lint
 ```
 Or for MailScanner v4:
+
 ```shell
  $ spamassassin -D -p /etc/MailScanner/spam.assassin.prefs.conf --lint
 ```
@@ -231,7 +293,7 @@ If you want to see the output of `MailScanner --lint` in Tools/MailScanner Lint 
 
 ### Database cleanup of maillog records
 
-add `db_clean.php` to `/etc/cron.daily/`
+add `mailwatch_db_clean.php` to `/etc/cron.daily/`
 
 You will then to edit `conf.php` the RECORD_DAYS_TO_KEEP definition.
 
@@ -255,7 +317,7 @@ You will need to edit the `quarantine_report.php` to reflect the location of the
 
 ### Test the MailWatch interface
 
-Point your browser to http://your-server-hostname/mailscanner/ - you should be prompted for a username and password - enter the details of the MailWatch web user that you created earlier, and you should see a list of the last 50 messages processed by MailScanner.
+Point your browser to http://your-mailwatch-virtualhost/ - you should be prompted for a username and password - enter the details of the MailWatch web user that you created earlier, and you should see a list of the last 50 messages processed by MailScanner.
 
 - Update the SpamAssassin Rules table
   MailWatch keeps a list of all the SpamAssassin rules and descriptions which are displayed on the 'Message Detail' page - to show the descriptions, you need to run the updater every time you add new rules or upgrade SpamAssassin.
@@ -263,98 +325,6 @@ Point your browser to http://your-server-hostname/mailscanner/ - you should be p
 
 - Update the GeoIP database
   Click on the 'Other' menu and select 'Update GeoIP database' and click 'Run Now'.
-
-### Optional steps for Sendmail
-
-#### Setup Sendmail Queue Watcher
-
-You can get MailWatch to watch and display your sendmail queue directories.
-
-Edit `tools/Sendmail_queue/mailq.php` to change the require line to point to the location of `functions.php`; copy `mailq.php` file to `/usr/local/bin` and setup the cronjob:
-
-```shell
- $ cp tools/Sendmail_queue/mailq.php /usr/local/bin
- $ crontab -e
-
- 0-59 * * * * 	/usr/local/bin/mailq.php
-```
-
-Note: `mailq.php` re-creates all entries on each run, so for busy sites you will probably want to change this to run every 5 minutes or greater.
-
-#### Setup the Sendmail Relay Log watcher (optional)
-
-You can get MailWatch to watch your sendmail logs and store all message relay information which is then displayed on the 'Message Detail' page which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
-
-```shell
- $ cp tools/Sendmail_relay/sendmail_relay.php /usr/local/bin
- $ cp tools/Sendmail_relay/sendmail_relay.init /etc/rc.d/init.d/
- $ chmod 777 /etc/rc.d/init.d/sendmail_relay.init
- $ /etc/rc.d/init.d/sendmail_relay.init start
- $ ln -s /etc/rc.d/init.d/sendmail_relay.init /etc/rc.2/S30sendmail_relay.init
-```
-
-### Optional steps for Postfix
-
-#### Adding Postfix relay information
-
-* Add the table to the database
-
-* Edit `mailwatch_relay.sh` and modify it to point to your php location and correct MailWatch installation path
-* Add `mailwatch_relay.sh` as an hourly cron job
-* Fix permissions of the postfix queue so that mailwatch can monitor them:
-
-``` shell
- $ chown postfix.apache /var/spool/postfix/incoming/
- $ chown postfix.apache /var/spool/postfix/hold
- $ chmod g+r /var/spool/postfix/hold
- $ chmod g+r /var/spool/postfix/incoming/
-```
-
-### Optional steps for MailScanner Rule Editor
-
-Make sure MailWatch's `conf.php` has the following lines at the end (amend as appropriate)
-
-```php
-<?php
-// Enable MailScanner Rule Editor
-define('MSRE', true);
-define('MSRE_RELOAD_INTERVAL', 5);
-define('MSRE_RULESET_DIR', "/etc/MailScanner/rules");
-```
-
-Change file permissions so that we can update the rules and change group and rules directory locations as appropriate
-
-```shell
- $ chgrp -R apache /etc/MailScanner/rules
- $ chmod g+rwxs /etc/MailScanner/rules
- $ chmod g+rw /etc/MailScanner/rules/*.rules
-```
-
-See also the INSTALL docs in `tools/MailScanner_rule_editor` and `tools/Cron_jobs` directories.
-
-### Optional steps to use LDAP directory for user management
-
-You can use a LDAP directory to authenticate users. `define('USE_LDAP', true);` will enable the backend and will connect to the ldap server `LDAP_HOST` on the port `LDAP_PORT` and binds to it by using `LDAP_USER` and `LDAP_PASS` as credentials. That user must have read access to the users login name and attributes that you are using for the filter.
-
-MailWatch will search users that are allowed to use it by using `LDAP_DN` as search base and `LDAP_FILTER` to filter the ldap entries to get the matching users login name. In the `LDAP_FILTER` you can use `%s` as replacement for the users login name that he entered on the login page of MailWatch.
-
-From this search result MailWatch uses the ldap attribute defined by `LDAP_USERNAME_FIELD` as login name to bind to the server for authentication. This login name can be extended by a prefix (`LDAP_BIND_PREFIX`) and suffix (`LDAP_BIND_SUFFIX`). The user then is authenticated with his password and this aggregated login name. Additionally you can define the ldap attribute containing the users mail address with `LDAP_EMAIL_FIELD` which will be used to only show the user mails that are related to his mail address as recipient or sender.
-
-Settings for Active Directory:
-```
-define('LDAP_FILTER', 'mail=%s');
-define('LDAP_EMAIL_FIELD', 'mail');
-define('LDAP_USERNAME_FIELD', 'userprincipalname');
-```
-<!--%TODO check openldap settings-->
-Example for OpenLDAP:
-```
-define('LDAP_FILTER', 'mail=%s'); 
-define('LDAP_EMAIL_FIELD', 'mail');
-define('LDAP_USERNAME_FIELD', 'cn');
-define('LDAP_BIND_PREFIX', 'cn=');
-define('LDAP_BIND_SUFFIX', ',dc=example,dc=com');
-```
 
 ### FINISHED!! (Phew!)
 

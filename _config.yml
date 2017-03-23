@@ -13,7 +13,8 @@ codeurl: 'https://github.com/mailwatch/1.2.0'
 
 # Default categories (in order) to appear in the navigation
 sections: [
-    ['doc', 'Documentation'],
+    ['install', 'Installation'],
+    ['optional', 'Optional Setup'],
     ['using', 'Using MailWatch'],
     ['dev', 'Developers'],
     ['post', 'Posts']

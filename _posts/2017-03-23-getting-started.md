@@ -1,8 +1,8 @@
 ---
 layout: page
 title: "Getting started"
-category: doc
-date: 2014-07-29 18:35:26
+category: install
+date: 2017-03-23 00:00:00
 order: 0
 ---
 
@@ -14,12 +14,11 @@ You must have a working MailScanner set-up and have running copies of:
 - Apache or nginx
 - PHP (with MySQL and GD support)
 
-And for MailScanner CustomConfig modules to be able to use a database, you need:
+And for MailScanner CustomConfig modules to be able to use a work, you need:
 
 - Perl
 - DBI
 - DBD-MySQL
-
-You also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding.
+- Encoding::FixLatin
 
 Please read through the installation/upgrading instructions in their entirety before proceeding.
