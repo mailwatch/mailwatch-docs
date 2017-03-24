@@ -16,15 +16,6 @@ Please read the documentation carefully to remove old files during the upgrade.
 
 follow [1.2.0 upgrading]({% post_url 2017-03-23-upgrading %}) instructions
 
-- Stop MailScanner and the MTA (Postfix, Exim or Sendmail).
-- Rename old MailWatch directory (e.g.: /opt/mailwatch to /opt/mailwatch-old) and move the mailscanner directory from the tarball to /var/www/html/.
-- Copy conf.php.example to conf.php and edit the file to suit your configuration.
-- Replace MailWatch.pm, SQLBlackWhiteList.pm and SQLSpamSettings.pm with new version 
-  from MailScanner_perl_scripts and set database connection settings in MailWatchConf.pm
-  if not already done.
-- Copy the 00MailWatchConf.pm from MailScanner_perl_scripts in /etc/MailScanner/custom
-  and set database connection settings.
-  
 ### Upgrading from 1.0.x to 1.0.3
 
 - Add grant for GeoIP updates: as mysql 'root' users run the following SQL:
