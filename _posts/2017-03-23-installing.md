@@ -83,6 +83,7 @@ NOTE: you will need to modify the above as necessary for your system if you have
 mysql> GRANT ALL ON mailscanner.* TO mailwatch@localhost IDENTIFIED BY '<password>';
 mysql> GRANT FILE ON *.* TO mailwatch@localhost IDENTIFIED BY '<password>';
 mysql> FLUSH PRIVILEGES;
+mysql> quit
 ```
 
 Copy `MailWatchConf.pm` in MailScanner CustomFunctions directory and edit it to match your database settings.
@@ -107,7 +108,7 @@ Symlinking instead of copying assure a painless upgrade in the future.
 ```
 ```sql
 Enter password: ******
-mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>'), fullname = '<name>', type = 'A'
+mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>'), fullname = '<name>', type = 'A';
 ```
 
 ### Install & Configure MailWatch
