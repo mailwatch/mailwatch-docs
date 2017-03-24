@@ -17,6 +17,8 @@ Follow this procedure to make sure that the upgrade process will go as smooth as
 ### Preliminary steps
 * find a good downtime window, this process may take a while when run on big installations
 * create a backup of your MailWatch database, safety first!
+* stop your mail flow (e.g.: stop yor MTA or block by firewall)
+* stop MailScanner
 * make a copy of `conf.php` file
 
 There are 2 install methods: zip install or git cloning: upgrade procedure differs a bit.
@@ -36,4 +38,7 @@ There are 2 install methods: zip install or git cloning: upgrade procedure diffe
 * run `php upgrade.php`
 * eventually adjust `conf.php` with new configuration entries that `upgrade.php` warned you about
 * copy `MailWatch.pm`, `SQLBlackWhiteList.pm`, `SQLSpamSettings.pm` and `MailWatchConf.pm` (the last one only if explicitly stated in release note) to Mailscanner custom function directory and edit `MailWatchConf.pm` to match the sql settings
+* start MailScanner
+* restart your mail flow (e.g.: start MTA or unblock by firewall)
+* Check the mail server logs (e.g.: /var/log/mail.log and /var/log/syslog) 
 * enjoy your upgraded MailWatch!
