@@ -120,3 +120,9 @@ define('LDAP_USERNAME_FIELD', 'cn');
 define('LDAP_BIND_PREFIX', 'cn=');
 define('LDAP_BIND_SUFFIX', ',dc=example,dc=com');
 ```
+
+### Web interface skinning
+
+From 1.2.1 it is possible to add `skin.css` file to `/opt/mailwatch/mailscanner` directory with your custom css rules.
+
+This file will not be overwritten by git upgrade, but remember to back it up if upgrading with zip method.
