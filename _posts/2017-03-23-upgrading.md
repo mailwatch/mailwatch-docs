@@ -17,6 +17,8 @@ Follow this procedure to make sure that the upgrade process will go as smooth as
 ### Preliminary steps
 * find a good downtime window, this process may take a while when run on big installations
 * create a backup of your MailWatch database, safety first!
+* stop your mail flow (e.g.: stop yor MTA or block by firewall)
+* stop MailScanner
 * make a copy of `conf.php` file
 
 There are 2 install methods: zip install or git cloning: upgrade procedure differs a bit.
@@ -33,7 +35,25 @@ There are 2 install methods: zip install or git cloning: upgrade procedure diffe
 * `git pull`
 
 ### Continue upgrade procedure
+
 * run `php upgrade.php`
 * eventually adjust `conf.php` with new configuration entries that `upgrade.php` warned you about
-* copy `MailWatch.pm`, `SQLBlackWhiteList.pm`, `SQLSpamSettings.pm` and `MailWatchConf.pm` (the last one only if explicitly stated in release note) to Mailscanner custom function directory and edit `MailWatchConf.pm` to match the sql settings
-* enjoy your upgraded MailWatch!
+* symlink, if not already done, `MailWatch.pm`, `SQLBlackWhiteList.pm`, and `SQLSpamSettings.pm` from `MailScanner_perl_scripts` directory to MailScanner custom function directory and copy and edit `MailWatchConf.pm` to match the sql settings
+* start MailScanner
+* restart your mail flow (e.g.: start MTA or unblock by firewall)
+* check the mail server logs (e.g.: /var/log/mail.log and /var/log/syslog) 
+
+enjoy your upgraded MailWatch!
+
+### Warning
+Several files have changed their name and location in MailWatch 1.2.0, particularly the PHP files that are launched in cron and the Init script files.
+
+Please read the documentation carefully to remove old files during the upgrade.
+
+## Upgrading from 1.2.0 to 1.2.1
+`00MailWatchConf.pm` was renamed to `MailWatchConf.pm` because it was failing on some perl versions: rename your file accordly and restart MailScanner
+
+```shell
+ $ mv /usr/share/MailScanner/perl/custom/00MailWatchConf.pm /usr/share/MailScanner/perl/custom/MailWatchConf.pm
+ $ service restart mailscanner
+```

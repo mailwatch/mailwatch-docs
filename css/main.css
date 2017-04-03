@@ -49,6 +49,7 @@ header .nav > li > a:focus {
     text-decoration: none;
     background-color: #f0c945;
 }
+
 /*pre, code {
     border: none;
     border-radius: 0;
@@ -75,7 +76,6 @@ footer {
     margin-top: 0;
 }
 
-
 #navigation {
     font-size: 0.9em;
     margin-top: 20px;
@@ -89,12 +89,23 @@ footer {
 #navigation .nav-header {
     padding-left: 0;
     padding-right: 0;
+    font-weight: 700;
 }
+
+#navigation .nav > li.current {
+    background-color: #f0c945;
+}
+
+#navigation .nav > li.current > a {
+    color: #222;
+}
+
 #navigation .nav > li > a {
     padding-top: 0;
     padding-bottom: 0;
+    margin-bottom: 5px;
 }
 
 ul + div.highlighter-rouge {
-    margin-left:40px;
+    margin-left: 40px;
 }

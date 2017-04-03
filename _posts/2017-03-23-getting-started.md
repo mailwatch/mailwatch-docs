@@ -10,9 +10,9 @@ order: 0
 
 You must have a working MailScanner set-up and have running copies of:
 
-- MySQL
+- MySQL (5.6 is recommended for full UTF-8 support, and MariaDB 10.x is reported working well too)
 - Apache or nginx
-- PHP (with MySQL and GD support)
+- PHP 5.3.17 or better (with MySQL and GD support), using last stable and supported version is highly suggested
 
 And for MailScanner CustomConfig modules to be able to use a work, you need:
 
