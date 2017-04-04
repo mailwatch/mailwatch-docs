@@ -56,16 +56,16 @@ In the following instructions `/opt/mailwatch` is used as base directory for Mai
 ```shell
 mkdir /opt/mailwatch
 cd /opt/mailwatch
-wget https://github.com/mailwatch/1.2.0/archive/v1.2.0.zip
-unzip v1.2.0.zip -d /opt/mailwatch
-rm v1.2.0.zip
+wget https://github.com/mailwatch/MailWatch/archive/v1.2.2.zip
+unzip v1.2.2.zip -d /opt/mailwatch
+rm v1.2.2.zip
 ```
 
 #### Git cloning
 ```shell
 mkdir /opt/mailwatch
 cd /opt/mailwatch
-git clone --depth=1 https://github.com/mailwatch/1.2.0.git .
+git clone --depth=1 https://github.com/mailwatch/MailWatch.git .
 ```
 
 ### Create the database
@@ -336,6 +336,6 @@ Point your browser to http://your-mailwatch-virtualhost/ - you should be prompte
 
 ### FINISHED!! (Phew!)
 
-Please open an [issue on GitHub](https://github.com/mailwatch/1.2.0/issues) or report to the mailing-list [mailwatch-users](http://lists.sourceforge.net/lists/listinfo/mailwatch-users) if you find any errors or omissions.
+Please open an [issue on GitHub](https://github.com/mailwatch/MailWatch/issues) or report to the mailing-list [mailwatch-users](http://lists.sourceforge.net/lists/listinfo/mailwatch-users) if you find any errors or omissions.
 
 Thanks!

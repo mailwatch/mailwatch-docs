@@ -9,7 +9,7 @@ subtitle: ''
 navigation: 2
 
 # URL to source code, used in _includes/footer.html
-codeurl: 'https://github.com/mailwatch/1.2.0'
+codeurl: 'https://github.com/mailwatch/MailWatch'
 
 # Default categories (in order) to appear in the navigation
 sections: [
