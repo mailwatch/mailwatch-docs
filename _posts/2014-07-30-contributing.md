@@ -15,12 +15,12 @@ For discussion, questions, and help with implementation, we use a mailing list n
 
 ### Requesting New Features
 
-If you've got a feature request for MailWatch, file it with the [GitHub issue tracker]((https://github.com/mailwatch/1.2.0/issues)).
+If you've got a feature request for MailWatch, file it with the [GitHub issue tracker]((https://github.com/mailwatch/MailWatch/issues)).
 We're aiming to create an useful utility, and would love to hear your ideas.
 
 ### Submitting Bug Reports
 
-If you find a problem with MailWatch, whether you are stuck or want to address it yourself, first log it using the [GitHub issue tracker](https://github.com/mailwatch/1.2.0/issues).
+If you find a problem with MailWatch, whether you are stuck or want to address it yourself, first log it using the [GitHub issue tracker](https://github.com/mailwatch/MailWatch/issues).
 That way, we can take a look and let you know how best to proceed, and if work is already underway on this issue.
 
 Note: The issue tracker is for bugs and new features, not help requests. For procedural questions - like help - see the above "Getting Help" section.
@@ -29,7 +29,7 @@ Note: The issue tracker is for bugs and new features, not help requests. For pro
 
 #### Getting Started
 * Make sure you have a [GitHub account](https://github.com/signup/free).
-* [Submit an issue](https://github.com/mailwatch/1.2.0/issues) for your issue, assuming one does not already exist.
+* [Submit an issue](https://github.com/mailwatch/MailWatch/issues) for your issue, assuming one does not already exist.
    * Clearly describe the issue and your enviroment including steps to reproduce when it is a bug.
    * Make sure you fill in the earliest version that you know has the issue.
 * If you want to contribute new code or fix existing one fork the repository on GitHub or sync your existing branch like described below.
@@ -50,7 +50,7 @@ Please make sure that your fork is in sync with with upstream:
 on your repository follow this procedure:
 
  1. `git checkout develop`
- 2. `git remote add upstream https://github.com/mailwatch/1.2.0.git`
+ 2. `git remote add upstream https://github.com/mailwatch/MailWatch.git`
  3. `git fetch upstream`
  4. `git rebase upstream/develop`
  5. fix code inconsistency if any (there should be none, if you work always on branch derived from develop)

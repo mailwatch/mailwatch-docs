@@ -10,7 +10,7 @@ order: 3
 
 When a new version of MailWatch is release upgrading to it is highly suggested: security and bug fixes, and new feature will be present in new releases!
 
-You can find new release on the frontpage of [MailWatch website](http://mailwatch.org) or at [releases page](https://github.com/mailwatch/1.2.0/releases) on GitHub 
+You can find new release on the frontpage of [MailWatch website](http://mailwatch.org) or at [releases page](https://github.com/mailwatch/MailWatch/releases) on GitHub 
 
 Follow this procedure to make sure that the upgrade process will go as smooth as possible.
 
