@@ -17,6 +17,7 @@ Follow this procedure to make sure that the upgrade process will go as smooth as
 ### Preliminary steps
 * find a good downtime window, this process may take a while when run on big installations
 * create a backup of your MailWatch database, safety first!
+* read release notes to check if any files change name or path
 * stop your mail flow (e.g.: stop yor MTA or block by firewall)
 * stop MailScanner
 * make a copy of `conf.php` file
