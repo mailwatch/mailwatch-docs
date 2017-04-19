@@ -354,9 +354,9 @@ You will need to edit the `mailwatch_quarantine_report.php` to reflect the locat
 
 ### Sudo file for MailWatch
 
-Edit `mailwatch` file to match web server user (www-data, apache or other) and MTA Queue and change executable path if needed.
-  
-Copy edited `mailwatch` file in `/etc/sudoers.d/`
+Copy `tools/sudo/mailwatch` file in `/etc/sudoers.d/`
+
+Edit `/etc/sudoers.d/mailwatch` file to match web server user (www-data, apache or other) and MTA Queue and change executable path if needed.
 
 Set permission to 0440 (`chmod 440 /etc/sudoers.d/mailwatch`)
 
