@@ -40,6 +40,7 @@ register_globals = Off
 magic_quotes_gpc = Off
 magic_quotes_runtime = Off
 session.auto_start = 0
+date.timezone = '<your time zone>'
 ```
 
 ## Installation
@@ -105,15 +106,18 @@ Symlinking instead of copying assure a painless upgrade in the future.
 
 ### Create a MailWatch web user
 
+You need at minimum to create the administrator user 'admin' needed to access the MailWatch GUI and to handle default Spam Setting used by SQLSpamSettings.pm script.
+
 ```shell
  $ mysql mailscanner -u mailwatch -p
 ```
 ```sql
 Enter password: ******
-mysql> INSERT INTO users SET username = '<username>', password = MD5('<password>'), fullname = '<name>', type = 'A';
+mysql> INSERT INTO users SET username = 'admin', password = MD5('<password>'), fullname = '<name>', type = 'A'
 ```
+MD5 password hash will be updated automatically to a more secure hash on first login.
 
-### Install & Configure MailWatch
+### Install and Configure MailWatch
 
 #### Checking permissions
 
@@ -201,7 +205,7 @@ server {
 Stop MailScanner
 
 ```shell
- $ service MailScanner stop
+ $ service mailscanner stop
 ```
 
 Next edit `/etc/MailScanner/MailScanner.conf` - you need to make sure that the following options are set:
@@ -245,7 +249,7 @@ Create the 'new' bayes directory, make the directory owned by the main group of 
 
 ```shell
  $ mkdir /etc/MailScanner/bayes
- $ chown postfix:apache /etc/MailScanner/bayes
+ $ chown root:www-data /etc/MailScanner/bayes
  $ chmod g+rws /etc/MailScanner/bayes
 ```
 
@@ -253,7 +257,7 @@ Copy the existing bayes databases and set the permissions:
 
 ```shell
  $ cp /root/.spamassassin/bayes_* /etc/MailScanner/bayes
- $ chown postfix:apache /etc/MailScanner/bayes/bayes_*
+ $ chown root:www-data /etc/MailScanner/bayes/bayes_*
  $ chmod g+rw /etc/MailScanner/bayes/bayes_*
 ```
 
@@ -283,13 +287,13 @@ debug: Score set 3 chosen.
 Start MailScanner up again.
 
 ```shell
- $ service MailScanner start && tail -f /var/log/maillog
+ $ service mailscanner start && tail -f /var/log/maillog
 ```
 
 You should see something like:
 
 ```
-Jun 13 12:18:23 hoshi MailScanner[26388]: MailScanner E-Mail Virus Scanner version 4.20-3 starting...
+Jun 13 12:18:23 hoshi MailScanner[26388]: MailScanner E-Mail Virus Scanner version 5.03-3 starting...
 Jun 13 12:18:24 hoshi MailScanner[26388]: Config: calling custom init function MailWatchLogging
 Jun 13 12:18:24 hoshi MailScanner[26388]: Initialising database connection
 Jun 13 12:18:24 hoshi MailScanner[26388]: Finished initialising database connection
@@ -301,31 +305,66 @@ If you want to see the output of `MailScanner --lint` in Tools/MailScanner Lint 
 
 ### Database cleanup of maillog records
 
-add `mailwatch_db_clean.php` to `/etc/cron.daily/`
+Copy `tools/Cron_jobs/mailwatch` to `/etc/cron.daily/`
 
-You will then to edit `conf.php` the RECORD_DAYS_TO_KEEP definition.
+```shell
+ $ cp tools/Cron_jobs/mailwatch /etc/cron.daily/
+ $ chmod +x /etc/cron.daily/mailwatch
+```
 
-You will need to edit the `db_clean.php` to reflect the location of the `functions.php` file
+You can edit `/etc/cron.daily/mailwatch` to fit your need.
+
+Copy `tools/Cron_jobs/mailwatch_db_clean.php` to `/usr/local/bin/` and make it executable:
+
+```shell
+ $ cp tools/Cron_jobs/mailwatch_db_clean.php /usr/local/bin/
+ $ chmod +x /usr/local/bin/mailwatch_db_clean.php
+```
+
+You need to edit `conf.php` and change the RECORD_DAYS_TO_KEEP definition.
+You will need to edit the `mailwatch_db_clean.php` to reflect the location of the `functions.php` file.
 
 ### Quarantine Maintenance
 
-Remove the clean.quarantine cronjob configured with MailScanner.
+For MailScanner v4: remove the clean.quarantine cronjob configured with MailScanner.
 
-Edit and copy `quarantine_maint.sh` to `/etc/cron.daily/`
+For MailScanner v5: change the variable for Quarantine Retention to "q_days=0" in `/etc/MailScanner/defaults`.
 
-You will then to edit `conf.php` the QUARANTINE_DAYS_TO_KEEP definition.
+Copy `tools/Cron_jobs/mailwatch_quarantine_maint.php` to `/usr/local/bin/` and make it executable:
 
-You will need to edit the `quarantine_maint.php` to reflect the location of the `functions.php` file
+```shell
+ $ cp tools/Cron_jobs/mailwatch_quarantine_maint.php /usr/local/bin/
+ $ chmod +x /usr/local/bin/mailwatch_quarantine_maint.php
+```
+
+You will need to edit `conf.php` the QUARANTINE_DAYS_TO_KEEP definition.
+
+You will need to edit the `mailwatch_quarantine_report.php` to reflect the location of the `functions.php` file.
 
 ### Quarantine Reporting
 
-Add `quarantine_report.php` to `/etc/cron.daily`
+Copy `tools/Cron_jobs/mailwatch_quarantine_maint.php` to `/usr/local/bin/` and make it executable:
 
-You will need to edit the `quarantine_report.php` to reflect the location of the `functions.php` file
+```shell
+ $ cp tools/Cron_jobs/mailwatch_quarantine_report.php /usr/local/bin/
+ $ chmod +x /usr/local/bin/mailwatch_quarantine_report.php
+```
+
+You will need to edit the `mailwatch_quarantine_report.php` to reflect the location of the `functions.php` file
+
+### Sudo file for MailWatch
+
+Edit `mailwatch` file to match web server user (www-data, apache or other) and MTA Queue and change executable path if needed.
+  
+Copy edited `mailwatch` file in `/etc/sudoers.d/`
+
+Set permission to 0440 (`chmod 440 /etc/sudoers.d/mailwatch`)
+
+This instruction should work in Debian 6 and 7, Ubuntu 12.04 and newer, RHEL 5 and 6 and CentOS 5 and 6.
 
 ### Test the MailWatch interface
 
-Point your browser to http://your-mailwatch-virtualhost/ - you should be prompted for a username and password - enter the details of the MailWatch web user that you created earlier, and you should see a list of the last 50 messages processed by MailScanner.
+Point your browser to http://your-mailwatch-virtualhost-address/ - you should be prompted for a username and password - enter the details of the MailWatch web user that you created earlier, and you should see a list of the last 50 messages processed by MailScanner.
 
 - Update the SpamAssassin Rules table
   MailWatch keeps a list of all the SpamAssassin rules and descriptions which are displayed on the 'Message Detail' page - to show the descriptions, you need to run the updater every time you add new rules or upgrade SpamAssassin.
