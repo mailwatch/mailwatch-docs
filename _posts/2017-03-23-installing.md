@@ -133,7 +133,7 @@ Check the permissions of `/opt/mailwatch/mailscanner/images` and `/opt/mailwatch
 ```
 
 #### Edit conf.php
-Create `conf.php` by copying `conf.php.example` and edit the values to suit, you will need to set `DB_USER` and `DB_PASS` to the MySQL user and password that you created earlier.
+Create `conf.php` by copying `conf.php.example` and edit the values to suit, you will need to set `DB_USER` and `DB_PASS` to the MySQL user and password that you created earlier and adjust any configuuration to your system, like `MAILWATCH_HOME` if it's not the default one.
 
 ```shell
  $ cp conf.php.example conf.php
@@ -147,6 +147,23 @@ The new quarantine flag is used by default and you must disable the clean.quaran
 To clean the quarantine - set `QUARANTINE_DAYS_TO_KEEP` in conf.php and run './quarantine_maint --clean'.  This should then be run daily from cron.
 If you are still using MailScanner 4.42 or older, updating your installation is highly recommanded; if you can't update you need to set the `QUARANTINE_USE_FLAG` to false in conf.php and use the clean.quarantine script supplied by MailScanner.
 
+#### Run upgrade.php
+
+After setting up your `conf.php` file you need to run the uprade script, which will take care of some optimization for your installation:
+
+* test DB connection
+* upgrade to full UTF-8 support if your MySQL installation support it (MySQL ≥ 5.5.3)
+* check MailScanner configuration and alert for missing mandatory configuration
+* check conf.php and alert for missing mandatory configuration
+
+```shell
+ $ php upgrade.php
+```
+
+`upgrade.php` accepts a couple of parameter that can be useful for you:
+
+* `--skip-user-confirm`: adding this parameter will bypass confirmation for running the upgrade script
+* `/path/to/functions.php`: you can pass a non standard path for `functions.php` file used by upgrade script
 
 #### Configure webserver
 
