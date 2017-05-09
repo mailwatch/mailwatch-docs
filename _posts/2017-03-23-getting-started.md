@@ -18,7 +18,7 @@ And for MailScanner CustomConfig modules to be able to use a work, you need:
 
 - Perl
 - DBI
-- DBD-MySQL
+- DBD-MySQL (full UTF-8 support exists from version 4.032, installing 4.042 is highly suggested)
 - Encoding::FixLatin
 
 Please read through the installation/upgrading instructions in their entirety before proceeding.
