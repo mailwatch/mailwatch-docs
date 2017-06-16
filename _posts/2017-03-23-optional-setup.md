@@ -128,3 +128,14 @@ define('LDAP_BIND_SUFFIX', ',dc=example,dc=com');
 
 From 1.2.1 it is possible to add `skin.css` file to `/opt/mailwatch/mailscanner` directory with your custom css rules.  
 This file will not be overwritten by git upgrade, but remember to back it up if upgrading with zip method.
+
+### Session configuration
+
+As of 1.2.3 user session has been enhanced to permit per user session timeout and MailWatch session name can be changed to avoid conflicts when the your environment makes use of multiple php sessions on the same server.
+
+Two new `conf.php` entries have been added: `SESSION_TIMEOUT` and `SESSION_NAME`:
+ 
+ - `SESSION_TIMEOUT` sets a global default timeout for users sessions duration and it's set to 10 minutes (600 seconds); range is 0 to 99999 seconds. Setting to 0 will disable session timeout and active session statuses. This can also be set individually per user in the MailWatch GUI for greater flexibility.
+ - `SESSION_NAME` sets the PHP session name of MailWatch instance, in case of session name conflicts. The session name can't consist of digits only, at least one letter must be present; otherwise a new session id is generated every time.
+
+Warning: setting `SESSION_TIMEOUT` to `0` can lead to security risk for your installation, if someone manage to steal your session id. 
