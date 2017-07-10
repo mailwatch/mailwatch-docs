@@ -53,3 +53,11 @@ Encoding::FixLatin can be installed with this simple command:
 ```shell
 $ cpan -i Encoding::FixLatin
 ```
+
+### Installing Digest::SHA1
+
+Digest::SHA1 can be installed with this command:
+
+```shell
+$ cpan -i Digest::SHA1
+```
