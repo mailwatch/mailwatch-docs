@@ -121,13 +121,9 @@ MD5 password hash will be updated automatically to a more secure hash on first l
 
 #### Checking permissions
 
-Check the permissions of `/opt/mailwatch/mailscanner/images` and `/opt/mailwatch/mailscanner/images/cache` - they should be ug+rwx and owned by root and in the same group as the web server user (www-data on Debian/Ubuntu or apache on RedHat). The web server user also needs write and read access to /opt/mailwatch/mailscanner/temp.
+The web server user needs write and read access to /opt/mailwatch/mailscanner/temp.
 
 ```shell
- $ chown root:apache images
- $ chmod ug+rwx images
- $ chown root:apache images/cache
- $ chmod ug+rwx images/cache
  $ chown root:apache temp
  $ chmod g+rw temp
 ```
