@@ -8,6 +8,43 @@ order: 1
 
 ## Changelog
 
+1.2.5
+-----------
+Improvements
+- Support for multiple virus scanners and multiple top viruses (#874)
+- Add detection of MySQL or MariaDB in upgrade process (#873)
+- Prevents Mail Queue summary from duplicating mail count when local server is defined in RPC list (#904, #905)
+- Enhance upgrade.php with check for conf.php syntax and MailScanner.conf existence
+- Better UI on tables and graphs
+- Improved translations
+
+Fixes
+- Fixes issue when sanitization causes ampersand to be html-ified (#882)
+- Fix mailwatch-sendmail-relay init script (#881)
+- Fix code for php 5.3 compatibility (#889) and php 7.0 compatibility (#897)
+- Fix path to mtalogprocessor file in senmail_relay (#912)
+- Remove on update/default value for timestamp in maillog table (#915)
+- Permit up to 20 chars in first part of Postfix msgid (#652)
+
+1.2.4
+-----------
+Improvements
+- Converted remaining graph to Chart.js and removed JpGraph dependency
+- Add OS detection in Software Version page
+- Add geoip_update cron script
+- New graph: Messages per Hour for the last 24 hours
+- Recognition of Message/Partial as attachment in view mail
+- Beautify error message on database exception
+- Add visual display for released and learned messages
+- Add a comunity code of conduct
+- Localization updates
+
+Fixes
+- Fix wrong MAILWATCH_SMTP_HOSTNAME defined check
+- Correct some graph generation
+- Fix timestamp field autoupdating in maillog table
+- Fix status mail queues in MailWatch cluster
+
 1.2.3
 -----------
 Improvements
