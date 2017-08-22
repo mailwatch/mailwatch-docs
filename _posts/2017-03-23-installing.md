@@ -8,13 +8,13 @@ order: 1
 
 ## Installation instructions
 
-MailWatch for MailScanner is developed on Debian 7 & Ubuntu 12.04, so these docs will reflect this and I will make note on anything that will be required to run on other distro's or operating systems.
+MailWatch for MailScanner is developed on Debian 7-9 & Ubuntu 12.04-16.04, so these docs will reflect this and I will make note on anything that will be required to run on other distro's or operating systems.
 
 If you're upgrading from a previous version, read [upgrading instructions]({% post_url 2017-03-23-upgrading %}).
 
 ### Before you start
 
-You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBI and DBD::mysql; you also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding.
+You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBI and DBD::mysql; you also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding and Perl Digest::SHA1 for generation of view tokens.
 
 Some PHP extensions and executable software are required to make MailWatch fully works:
 
@@ -373,7 +373,7 @@ Edit `/etc/sudoers.d/mailwatch` file to match web server user (www-data, apache 
 
 Set permission to 0440 (`chmod 440 /etc/sudoers.d/mailwatch`)
 
-This instruction should work in Debian 6 and 7, Ubuntu 12.04 and newer, RHEL 5 and 6 and CentOS 5 and 6.
+This instruction should work in Debian 6 and newer, Ubuntu 12.04 and newer, RHEL 5 and 6 and CentOS 5 and 6.
 
 ### Test the MailWatch interface
 
