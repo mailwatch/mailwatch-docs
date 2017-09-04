@@ -140,7 +140,7 @@ Note that MailWatch 1.0 and later can use the quarantine more effectively when u
 This means that MailWatch 1.0 is *much* faster when you have a large quarantine directory.  The new quarantine report requires the use of the new functionality - so you must upgrade if you want to run this.
 The new quarantine flag is used by default and you must disable the clean.quarantine script supplied by MailScanner and use the new quarantine_maint.php script in the tools directory instead.
 
-To clean the quarantine - set `QUARANTINE_DAYS_TO_KEEP` in conf.php and run './quarantine_maint --clean'.  This should then be run daily from cron.
+To clean the quarantine - set `QUARANTINE_DAYS_TO_KEEP` in conf.php and run `./quarantine_maint --clean`.  This should then be run daily from cron.
 If you are still using MailScanner 4.42 or older, updating your installation is highly recommanded; if you can't update you need to set the `QUARANTINE_USE_FLAG` to false in conf.php and use the clean.quarantine script supplied by MailScanner.
 
 #### Run upgrade.php
