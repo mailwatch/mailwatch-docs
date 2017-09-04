@@ -167,7 +167,7 @@ It's recommended to setup a virtualhost to manage MailWatch; this setup depends 
 Below you'll find basic config example for apache and nginx, adapt them to your prefered setup (ssl, additional header, and so on).
 
 #### nginx
-```apacheconfig
+```nginx
 server {
     listen 80 default_server;
     server_name mailwatch.example.org;
@@ -192,7 +192,7 @@ server {
 ```
 
 #### Apache
-```apacheconfig
+```apache
 <virtualhost *:80>
     ServerName mailwatch.example.org
     DocumentRoot "/opt/mailwatch/mailscanner"
@@ -223,7 +223,7 @@ Stop MailScanner
 
 Next edit `/etc/MailScanner/MailScanner.conf` - you need to make sure that the following options are set:
 
-```cfg
+```config
 Always Looked Up Last = &MailWatchLogging
 Detailed Spam Report = yes
 Quarantine Whole Message = yes
@@ -236,7 +236,7 @@ Quarantine Permissions = 0660
 
 If you are using Exim or Postfix you also have to adjust the following settings (replace `Debian-exim` with `postfix` when using postfix :
 
-```cfg
+```config
 Run As User = Debian-exim
 Run As Group = Debian-exim
 Incoming Work User = Debian-exim
@@ -253,7 +253,7 @@ Spam Actions and High Scoring Spam Actions should also have 'store' as one of th
 
 Edit `/etc/MailScanner/spamassassin.conf`(MailScanner v5) or `/etc/MailScanner/spam.assassin.prefs.conf`(MailScanner v4) and set:
 
-```cfg
+```config
 bayes_path /etc/MailScanner/bayes/bayes
 bayes_file_mode 0660
 ```

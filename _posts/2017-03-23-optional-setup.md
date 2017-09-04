@@ -14,7 +14,7 @@ With MailWatch you can manage whitelist and blacklist from the web interface.
 
 In `MailScanner.conf` you must set:
 
-```cfg
+```config
 Is Definitely Not Spam = &SQLWhitelist
 Is Definitely Spam = &SQLBlacklist
 ```
@@ -62,12 +62,12 @@ You can get MailWatch to watch your Sendmail MTA logs and store all message rela
 On Debian/Ubuntu:
 
 ```shell
-# cp tools/Sendmail_relay/mailwatch_sendmail_relay.php /usr/local/bin/.
-# cp tools/Sendmail_relay/mailwatch-sendmail-relay /etc/init.d/.
-# chmod +x /usr/local/bin/mailwatch_sendmail_relay.php
-# chmod +x /etc/init.d/mailwatch-sendmail-relay
-# /etc/init.d/mailwatch-sendmail-relay start
-# update-rc.d mailwatch-sendmail-relay defaults
+ $ cp tools/Sendmail_relay/mailwatch_sendmail_relay.php /usr/local/bin/.
+ $ cp tools/Sendmail_relay/mailwatch-sendmail-relay /etc/init.d/.
+ $ chmod +x /usr/local/bin/mailwatch_sendmail_relay.php
+ $ chmod +x /etc/init.d/mailwatch-sendmail-relay
+ $ /etc/init.d/mailwatch-sendmail-relay start
+ $ update-rc.d mailwatch-sendmail-relay defaults
 ```
 
 For others Linux distributions, please change according to.
