@@ -379,6 +379,20 @@ Set permission to 0440 (`chmod 440 /etc/sudoers.d/mailwatch`)
 
 This instruction should work in Debian 6 and newer, Ubuntu 12.04 and newer, RHEL 5 and 6 and CentOS 5 and 6.
 
+### Using MailWatch with MailScanner and Systemd
+Most distributions are slowly switching from SysVinit or others to Systemd as init system to start services etc. 
+
+If you are using Systemd as init system you should consider adding the service for MySQL/MariaDB as dependency for mailscanner. If not it could be that mails that are incoming on server start will pass the mta and MailScanner while the sql server has not started yet and no mail will be logged to MailWatch at that moment. 
+
+To prevent this you should run `systemctl edit mailscanner.service` or create a file at `/etc/systemd/system/mailscanner.service.d/override.conf` with the following two lines:
+```
+[Unit]
+Wants=mariadb.service
+```
+
+This will start the sql server before MailScanner but still starts MS if the sql server can't be started for whatever reason. If you don't want to start MailScanner at all in case of a defect sql server replace `Wants=` with `Requires=`. 
+(more info to systemd services: https://www.freedesktop.org/software/systemd/man/systemd.unit.html)
+
 ### Test the MailWatch interface
 
 Point your browser to http://your-mailwatch-virtualhost-address/ - you should be prompted for a username and password - enter the details of the MailWatch web user that you created earlier, and you should see a list of the last 50 messages processed by MailScanner.
