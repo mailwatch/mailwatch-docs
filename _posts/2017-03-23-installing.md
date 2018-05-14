@@ -249,6 +249,8 @@ Quarantine Permissions = 0644
 
 Additionally set permissions for the webserver to see the postfix queue with:
 ```shell
+
+usermod -a -G mtagroup www-data
 chgrp mtagroup /var/spool/postfix/incoming
 chgrp mtagroup /var/spool/postfix/hold
 chmod g+rx /var/spool/postfix/incoming
