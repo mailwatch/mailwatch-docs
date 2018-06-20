@@ -247,6 +247,16 @@ Quarantine Group = mtagroup
 Quarantine Permissions = 0644
 ```
 
+Additionally set permissions for the webserver to see the postfix queue with:
+```shell
+
+usermod -a -G mtagroup www-data
+chgrp mtagroup /var/spool/postfix/incoming
+chgrp mtagroup /var/spool/postfix/hold
+chmod g+rx /var/spool/postfix/incoming
+chmod g+rx /var/spool/postfix/hold
+```
+
 Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
 
 ### Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
@@ -266,13 +276,22 @@ Create the 'new' bayes directory, make the directory owned by the main group of 
  $ chmod g+rws /etc/MailScanner/bayes
 ```
 
-Copy the existing bayes databases and set the permissions:
+Copy the existing bayes databases ...
 
 ```shell
  $ cp /root/.spamassassin/bayes_* /etc/MailScanner/bayes
+```
+... or just create new bayes databases ...
+```shell
+$ sa-learn --sync
+```
+
+... and setup permissions
+```shell
  $ chown root:www-data /etc/MailScanner/bayes/bayes_*
  $ chmod g+rw /etc/MailScanner/bayes/bayes_*
 ```
+
 
 Test SpamAssassin to make sure that it is using the new databases correctly:
 
