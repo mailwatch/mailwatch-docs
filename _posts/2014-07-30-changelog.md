@@ -7,6 +7,48 @@ order: 1
 ---
 
 ## Changelog
+1.2.10
+-----------
+Compatibility
+- Disable geoip for php <5.4 (#1075)
+
+Fixes
+- Fix version display for geoip (#1063)
+- Improve MaxMindDB version detection
+- Fix schema for user table to not allow empty type (#1067
+- Simplify ClamAV version detection (#1060)
+- Detect failed collation change on db connect and set manually (#1078)
+- Fix mail filter for normal users (#1084)
+- Fix missing translation in quarantine report emails (#1090)
+
+1.2.9
+-----------
+Compatibility
+- Minimal PHP version is now 5.4. Older versions of 5.3.x or lower do not work correctly with GeoLite2 (#1073)
+
+Improvements
+- Use new GeoLite2 database to replace deprecated GeoLite Legacy databases. 
+
+Fixes
+- Parse correctly GPG signed e-mail (#1053)
+- Send empty quarantine reports over user_manager (#1054)
+
+1.2.8
+-----------
+Improvements
+- Add ldap debug script
+- Update documentation
+- Improve sudo config to work with Postfix and Exim
+- Add mailwatch_update_sarules.php cronjob script
+- Use MAILWATCH_SMTP_HOSTNAME if defined on Release from quarantine (#1038)
+- Enable use of dn field as username field (#427, #1029)
+
+Fixes
+- Fix Postfix log processor (#1021)
+- Make msre reload script work on systemd
+- Fix error on undefined $_SERVER['HTTPS'] index
+- Fix logout process (#1044)
+- Fix email validation for username (#1042)
 
 1.2.7
 -----------

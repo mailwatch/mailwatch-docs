@@ -247,6 +247,16 @@ Quarantine Group = mtagroup
 Quarantine Permissions = 0644
 ```
 
+Additionally set permissions for the webserver to see the postfix queue with:
+```shell
+
+usermod -a -G mtagroup www-data
+chgrp mtagroup /var/spool/postfix/incoming
+chgrp mtagroup /var/spool/postfix/hold
+chmod g+rx /var/spool/postfix/incoming
+chmod g+rx /var/spool/postfix/hold
+```
+
 Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
 
 ### Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
@@ -266,13 +276,22 @@ Create the 'new' bayes directory, make the directory owned by the main group of 
  $ chmod g+rws /etc/MailScanner/bayes
 ```
 
-Copy the existing bayes databases and set the permissions:
+Copy the existing bayes databases ...
 
 ```shell
  $ cp /root/.spamassassin/bayes_* /etc/MailScanner/bayes
+```
+... or just create new bayes databases ...
+```shell
+$ sa-learn --sync
+```
+
+... and setup permissions
+```shell
  $ chown root:www-data /etc/MailScanner/bayes/bayes_*
  $ chmod g+rw /etc/MailScanner/bayes/bayes_*
 ```
+
 
 Test SpamAssassin to make sure that it is using the new databases correctly:
 
@@ -374,20 +393,6 @@ Edit `/etc/sudoers.d/mailwatch` file to match web server user (www-data, apache 
 Set permission to 0440 (`chmod 440 /etc/sudoers.d/mailwatch`)
 
 This instruction should work in Debian 6 and newer, Ubuntu 12.04 and newer, RHEL 5 and 6 and CentOS 5 and 6.
-
-### Using MailWatch with MailScanner and Systemd
-Most distributions are slowly switching from SysVinit or others to Systemd as init system to start services etc. 
-
-If you are using Systemd as init system you should consider adding the service for MySQL/MariaDB as dependency for mailscanner. If not it could be that mails that are incoming on server start will pass the mta and MailScanner while the sql server has not started yet and no mail will be logged to MailWatch at that moment. 
-
-To prevent this you should run `systemctl edit mailscanner.service` or create a file at `/etc/systemd/system/mailscanner.service.d/override.conf` with the following two lines:
-```
-[Unit]
-Wants=mariadb.service
-```
-
-This will start the sql server before MailScanner but still starts MS if the sql server can't be started for whatever reason. If you don't want to start MailScanner at all in case of a defect sql server replace `Wants=` with `Requires=`. 
-(more info to systemd services: https://www.freedesktop.org/software/systemd/man/systemd.unit.html)
 
 ### Test the MailWatch interface
 
