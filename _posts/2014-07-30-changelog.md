@@ -7,6 +7,7 @@ order: 1
 ---
 
 ## Changelog
+
 1.2.10
 -----------
 Compatibility
