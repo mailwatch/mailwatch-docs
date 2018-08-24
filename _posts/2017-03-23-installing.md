@@ -57,16 +57,16 @@ In the following instructions `/opt/mailwatch` is used as base directory for Mai
 ```shell
 mkdir /opt/mailwatch
 cd /opt/mailwatch
-wget https://github.com/mailwatch/MailWatch/archive/v1.2.2.zip
-unzip v1.2.2.zip -d /opt/mailwatch
-rm v1.2.2.zip
+wget https://github.com/mailwatch/MailWatch/archive/v1.2.10.zip
+unzip v1.2.10.zip -d /opt/mailwatch
+rm v1.2.10.zip
 ```
 
 #### Git cloning
 ```shell
 mkdir /opt/mailwatch
 cd /opt/mailwatch
-git clone --depth=1 https://github.com/mailwatch/MailWatch.git .
+git clone --depth=1 https://github.com/mailwatch/MailWatch.git --branch 1.2 --single-branch .
 ```
 
 ### Create the database
