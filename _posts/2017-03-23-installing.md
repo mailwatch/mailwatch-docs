@@ -239,12 +239,21 @@ If you are using Exim or Postfix you also have to adjust the following settings 
 ```config
 Run As User = Debian-exim
 Run As Group = Debian-exim
+MTA = exim
 Incoming Work User = Debian-exim
 Incoming Work Group = mtagroup
 Incoming Work Permissions = 0660
+Detailed Spam Report = yes
+Quarantine Whole Message = yes
+Quarantine Whole Messages As Queue Files = no
 Quarantine User = Debian-exim
 Quarantine Group = mtagroup
 Quarantine Permissions = 0644
+Always Looked Up Last = &MailWatchLogging
+Incoming Queue Dir = /var/spool/exim4/input
+Outgoing Queue Dir = /var/spool/exim4_outgoing/input
+Sendmail = /usr/sbin/exim4
+Sendmail2 = /usr/sbin/exim4 -DOUTGOING
 ```
 
 Additionally set permissions for the webserver to see the postfix queue with:
