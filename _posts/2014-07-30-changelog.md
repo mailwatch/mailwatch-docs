@@ -2,11 +2,35 @@
 layout: page
 title: "Changelog"
 category: dev
-date: 2017-12-01 18:00:00
+date: 2018-12-12 18:21:00
 order: 1
 ---
 
 ## Changelog
+
+1.2.12
+-----------
+Security
+- Fix clear password display when user is autocreated by IMAP auth
+
+Fixes
+- Add client IP in sorting input validation
+
+1.2.11
+-----------
+Improvements
+- Milter enhancement for MailWatch (#1106)
+- Big update to Brazilian translation
+- Better count of Postfix processes
+- Upgrade pear/Mail_Mime to 1.10.2
+
+Fixes
+- Fix printing multiple mails on detail.php (#1100)
+- Truncate long Top Virus output (#1112)
+- Fix long queue id validation (#1105)
+- Redirect if login page session expired (#1111)
+- Fix printing multiple mails on detail.php (#1100)
+- Remove empty column on rep_total_mail_by_date.php (#1095, #1096)
 
 1.2.10
 -----------
