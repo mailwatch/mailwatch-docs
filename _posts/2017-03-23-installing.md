@@ -403,7 +403,7 @@ Point your browser to http://your-mailwatch-virtualhost-address/ - you should be
   Click on the 'Other' menu and select 'Update SpamAssassin Rule Descriptions' and click 'Run Now'.
 
 - Update the GeoIP database
-  Click on the 'Other' menu and select 'Update GeoIP database' and click 'Run Now'.
+  Click on the 'Other' menu and select 'Update GeoIP database' and click 'Run Now'. To update GeoIP database you need to obtain a free License Key: you can get one by visiting www.maxmind.com . 
 
 ### FINISHED!! (Phew!)
 
