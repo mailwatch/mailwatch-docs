@@ -20,7 +20,7 @@ And for MailScanner CustomConfig modules to be able to use a work, you need:
 - DBI
 - DBD::mysql (full UTF-8 support exists from version 4.032, but installing 4.042 is highly suggested)
 - Encoding::FixLatin
-- Digest::SHA1
+- Digest::SHA
 
 Please read through the installation/upgrading instructions in their entirety before proceeding.
 
@@ -41,7 +41,7 @@ $ apt-get install libmysqlclient-dev
 $ cpan -i DBD::mysql
 ```
 
-Verify that your installed DBD::mysql version is at least 4.032, but 4.042 is highly suggested
+Verify that your installed DBD::mysql version is at least 4.032, but 4.042 or greater is highly suggested
 
 ```shell
 $ perl -MDBD::mysql -e 'print $DBD::mysql::VERSION'
@@ -55,10 +55,10 @@ Encoding::FixLatin can be installed with this simple command:
 $ cpan -i Encoding::FixLatin
 ```
 
-### Installing Digest::SHA1
+### Installing Digest::SHA
 
 Digest::SHA1 can be installed with this command:
 
 ```shell
-$ cpan -i Digest::SHA1
+$ cpan -i Digest::SHA
 ```
