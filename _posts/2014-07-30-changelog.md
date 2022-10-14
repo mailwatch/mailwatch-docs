@@ -8,6 +8,52 @@ order: 1
 
 ## Changelog
 
+1.2.19
+-----------
+Improvements
+- More performant and reliable milter queue relay parsing
+- Permit IPv4-mapped IPv6 address in audit_log table
+- Add support for F-Secure 12 antivirus status (#1239)
+- Better compatibility with PHP 8
+
+Fixes
+- Fix missing Serializer directory
+- Prevent Logging failure in MailWatch.pm
+- Prevent MailWatch.pm from dying prematurely
+- Prevent SQLBlackWhiteList.pm from dying prematurely
+- Prevent SQLSpamSettings.pm from dying prematurely
+- Revert rule column to 191 chars (#1125)
+- Remove some deprecated php functions and variables
+- Correct directory check in msmail genericqueue()
+- Require database class earlier to prevent fatal error on calling audit_log function (#1247)
+
+1.2.18
+-----------
+Improvements
+- Add DB_PORT config value to specify a non-standard MySQL server port (#1213)
+- Add new config flag to permit IMAP login without full email as username (#1211)
+- Add support for F-Secure 12 antivirus
+- Add support for ESET File Security antivirus
+
+Fixes
+- Fix errors on importing messages from MailScanner containing UTF8 chars in messageid and reports (#1208)
+- Fix upgrade script
+
+1.2.17
+-----------
+Improvements
+- Log failed login attempts to php error log with clients ip (#1202)
+
+Fixes
+- Upgrade rule_desc column length to 512 chars in sa_rules and mcp_rules tables
+- Fix mailwatch_sendmail_relay.php coding problems (#1206)
+- Quarantine reports to include multiple recipients (#1194)
+- Fix undefined offset in reports page (#1200)
+- Convert special html chars to html entities when importing SpamAssassin rules description
+- Improve terminology used
+- Fix SpamAssassin rule descriptions sorting
+- Fix tools/Sendmail-Exim_queue/mailq.crontab and updated related documentation
+
 1.2.16
 -----------
 Compatibility
