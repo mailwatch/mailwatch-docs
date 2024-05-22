@@ -14,7 +14,7 @@ If you're upgrading from a previous version, read [upgrading instructions]({% po
 
 ### Before you start
 
-You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBI and DBD::mysql; you also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding and Perl Digest::SHA1 for generation of view tokens.
+You must have a working MailScanner set-up and have running copies of MySQL, Apache, PHP (with MySQL and GD support) and for MailScanner to be able to use a database you need Perl DBI and DBD::MariaDB; you also need Perl Encoding::FixLatin to deal with email subjects that contain characters in more than one encoding and Perl Digest::SHA1 for generation of view tokens.
 
 Some PHP extensions and executable software are required to make MailWatch fully works:
 

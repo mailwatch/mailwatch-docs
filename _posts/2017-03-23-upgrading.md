@@ -51,6 +51,13 @@ Several files have changed their name and location in MailWatch 1.2.0, particula
 
 Please read the documentation carefully to remove old files during the upgrade.
 
+## Upgrading from 1.2.23 to 1.2.24
+`DBD:mysql` was replace by `DBD::MariaDB` to fully support UTF8 and MariaDB server, you need to install the new perl library:
+
+```shell
+ $ cpan -i DBD::MariaDB
+```
+
 ## Upgrading from 1.2.0 to 1.2.1
 `00MailWatchConf.pm` was renamed to `MailWatchConf.pm` because it was failing on some perl versions: rename your file accordly and restart MailScanner
 
