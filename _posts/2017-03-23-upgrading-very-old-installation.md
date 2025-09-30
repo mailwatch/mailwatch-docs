@@ -30,7 +30,7 @@ follow [1.2.0 upgrading]({% post_url 2017-03-23-upgrading %}) instructions
 
 - Copy conf.php.example to conf.php and edit the file to suit.
 
-- Replace MailWatch.pm with new version and set database connection settings, restart MailScanner for this to take effect.
+- Replace MailWatch.pm with a new version and set database connection settings, restart MailScanner for this to take effect.
 
 ### Upgrading from 0.5.1 to 1.0
 
@@ -46,13 +46,13 @@ follow [1.2.0 upgrading]({% post_url 2017-03-23-upgrading %}) instructions
    new functionality - so you must upgrade if you want to run this.
   
    The new quarantine flag is not used by default - if you have MailScanner
-   verions 4.43 or later, you can activate the new functionality by setting
+    version 4.43 or later, you can activate the new functionality by setting
    QUARANTINE_USE_FLAG to true in conf.php - if you do this, you must disable
    the clean.quarantine script supplied by MailScanner and use the new 
    quarantine_maint.php script in the tools directory instead.
 
-   The once the new flag is enabled - you will need to populate the database
-   with a flag for each of the message currently existing in your quarantine.
+   Once the new flag is enabled - you will need to populate the database
+   with a flag for each of the messages currently existing in your quarantine.
    You do this by running './quarantine_maint.php --reconcile'.
 
    To clean the quarantine - set 'QUARANTINE_DAYS_TO_KEEP' in conf.php and 
@@ -100,7 +100,7 @@ follow [1.2.0 upgrading]({% post_url 2017-03-23-upgrading %}) instructions
    'require MailScanner/MailWatch.pm' from CustomConfig.pm if necessary.
 
 - Install SQLBlackWhiteList.pm if required
-   If you wish to use the new integrated Blacklist/Whitelist functionality, 
+   If you wish to use the new integrated Blocklist/Allowlist functionality, 
    then edit the file and change the connection string in the CreateList
    subroutine to match MailWatch.pm. 
 
@@ -118,7 +118,7 @@ follow [1.2.0 upgrading]({% post_url 2017-03-23-upgrading %}) instructions
    
 - Test the new web interface.
 
-  Run the SpamAssassin Rules Update and the MCP Rules Update (is you use MCP) 
+  Run the SpamAssassin Rules Update and the MCP Rules Update (if you use MCP) 
   and run the GeoIP database update.
 
 - If used, replace sendmail_relay.php and mailq.php with the latest versions.

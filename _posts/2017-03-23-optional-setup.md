@@ -6,11 +6,11 @@ date: 2017-03-23 00:00:00
 order: 2
 ---
 ## Optional Setup
-MailWatch experience can be enhanced by some optional configuration step that 
+MailWatch experience can be enhanced by some optional configuration steps that 
 
 
 ### Integrate Blacklist/Whitelist
-With MailWatch you can manage whitelist and blacklist from the web interface.
+With MailWatch you can manage allowlist and blocklist from the web interface.
 
 In `MailScanner.conf` you must set:
 
@@ -23,7 +23,7 @@ Is Definitely Spam = &SQLBlacklist
 
 #### Adding Postfix relay information to message detail
 
-You can get MailWatch to watch your Postfix MTA logs and store all message relay information which is then displayed on the 'Message Detail' page which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
+You can get MailWatch to watch your Postfix MTA logs and store all message relay information which is then displayed on the 'Message Detail' page, which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
 
 ```shell
  $ cp tools/Postfix_relay/mailwatch-postfix-relay /etc/cron.hourly
@@ -57,7 +57,7 @@ Note: `mailwatch_sendmail_queue.php` re-creates all entries on each run, so for 
 
 #### Setup the Sendmail Relay Log watcher
 
-You can get MailWatch to watch your Sendmail MTA logs and store all message relay information which is then displayed on the 'Message Detail' page which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
+You can get MailWatch to watch your Sendmail MTA logs and store all message relay information which is then displayed on the 'Message Detail' page, which helps debugging and makes it easy for a Helpdesk to actually see where a message was delivered to by the MTA and what the response back was (e.g. the remote queue id etc.).
 
 On Debian/Ubuntu:
 
@@ -70,9 +70,9 @@ On Debian/Ubuntu:
  $ update-rc.d mailwatch-sendmail-relay defaults
 ```
 
-For others Linux distributions, please change according to.
+For other Linux distributions, please change according to.
 
-By default, `mailwatch_sendmail_relay.php` run with 'root' user. Change user to your webserver or Sendmail MTA user (check right one on /var/log/mail.log).
+By default, `mailwatch_sendmail_relay.php` run with 'root' user. Change user to your webserver or Sendmail MTA user (check the right one on /var/log/mail.log).
 
 ### MailScanner Rule Editor
 Make sure MSRE (MailScanner Rule Editor) is enabled in MailWatch's `conf.php`:
@@ -85,7 +85,7 @@ define('MSRE_RELOAD_INTERVAL', 5);
 define('MSRE_RULESET_DIR', '/etc/MailScanner/rules');
 ```
 
-Change file permissions so that we can update the rules, and change group and rules directory locations as appropriate
+Change file permissions so that we can update the rules and change group and rules directory locations as appropriate
 
 ```shell
  $ chgrp -R www-data /etc/MailScanner/rules
@@ -97,13 +97,13 @@ See also the INSTALL docs in `tools/MailScanner_rule_editor` and `tools/Cron_job
 
 ### LDAP directory for user management
 
-You can use a LDAP directory to authenticate users. Setting `USE_LDAP` to `true` in `conf.php` will enable the backend and will connect to the ldap server `LDAP_HOST` on the port `LDAP_PORT` and binds to it by using `LDAP_USER` and `LDAP_PASS` as credentials. That user must have read access to the users login name and attributes that you are using for the filter.
+You can use an LDAP directory to authenticate users. Setting `USE_LDAP` to `true` in `conf.php` will enable the backend and will connect to the ldap server `LDAP_HOST` on the port `LDAP_PORT` and binds to it by using `LDAP_USER` and `LDAP_PASS` as credentials. That user must have read access to the users login name and attributes that you are using for the filter.
 
 MailWatch will search users that are allowed to use it by using `LDAP_DN` as search base and `LDAP_FILTER` to filter the ldap entries to get the matching users login name. In the `LDAP_FILTER` you can use `%s` as replacement for the users login name that he entered on the login page of MailWatch.
 
 From this search result MailWatch uses the ldap attribute defined by `LDAP_USERNAME_FIELD` as login name to bind to the server for authentication.  
 This login name can be extended by a prefix (`LDAP_BIND_PREFIX`) and suffix (`LDAP_BIND_SUFFIX`).  
-The user then is authenticated with his password and this aggregated login name. Additionally you can define the ldap attribute containing the users mail address with `LDAP_EMAIL_FIELD` which will be used to only show the user mails that are related to his mail address as recipient or sender.
+The user then is authenticated with his password and this aggregated login name. Additionally, you can define the ldap attribute containing the users mail address with `LDAP_EMAIL_FIELD` which will be used to only show the user mails that are related to his mail address as recipient or sender.
 
 Settings for Active Directory:
 
@@ -126,16 +126,16 @@ define('LDAP_BIND_SUFFIX', ',dc=example,dc=com');
 
 ### Web interface skinning
 
-From 1.2.1 it is possible to add `skin.css` file to `/opt/mailwatch/mailscanner` directory with your custom css rules.  
+From 1.2.1 it is possible to add `skin.css` file to `/opt/mailwatch/mailscanner` directory with your custom CSS rules.  
 This file will not be overwritten by git upgrade, but remember to back it up if upgrading with zip method.
 
 ### Session configuration
 
-As of 1.2.3 user session has been enhanced to permit per user session timeout and MailWatch session name can be changed to avoid conflicts when the your environment makes use of multiple php sessions on the same server.
+As of 1.2.3 user session has been enhanced to permit per-user session timeout, and MailWatch session name can be changed to avoid conflicts when your environment makes use of multiple php sessions on the same server.
 
 Two new `conf.php` entries have been added: `SESSION_TIMEOUT` and `SESSION_NAME`:
  
- - `SESSION_TIMEOUT` sets a global default timeout for users sessions duration and it's set to 10 minutes (600 seconds); range is 0 to 99999 seconds. Setting to 0 will disable session timeout and active session statuses. This can also be set individually per user in the MailWatch GUI for greater flexibility.
+ - `SESSION_TIMEOUT` sets a global default timeout for users' session duration, and it's set to 10 minutes (600 seconds); range is 0 to 99999 seconds. Setting to 0 will disable session timeout and active session statuses. This can also be set individually per user in the MailWatch GUI for greater flexibility.
  - `SESSION_NAME` sets the PHP session name of MailWatch instance, in case of session name conflicts. The session name can't consist of digits only, at least one letter must be present; otherwise a new session id is generated every time.
 
 Warning: setting `SESSION_TIMEOUT` to `0` can lead to security risk for your installation, if someone manage to steal your session id. 

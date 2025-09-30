@@ -33,7 +33,6 @@ future: true
 #enable some pugins
 gems:
   - jekyll-sitemap
-  - jekyll-mentions
 
 # Exclude non-site files
 exclude: ['bin', 'README.md', 'LICENSE.md']
