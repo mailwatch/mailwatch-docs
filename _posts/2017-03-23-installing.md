@@ -8,7 +8,7 @@ order: 1
 
 ## Installation instructions
 
-MailWatch for MailScanner is developed on Debian 7-9 & Ubuntu 12.04-16.04, so these docs will reflect this and I will make note on anything that will be required to run on other distro's or operating systems.
+MailWatch for MailScanner is developed on Debian 7-9 & Ubuntu 12.04-16.04, so these docs will reflect this, and I will make note on anything that will be required to run on other distro's or operating systems.
 
 If you're upgrading from a previous version, read [upgrading instructions]({% post_url 2017-03-23-upgrading %}).
 
@@ -48,7 +48,7 @@ date.timezone = '<your time zone>'
 All commands below should be run as 'root' user.
 
 ### Installing MailWatch
-There are 2 methods to install MailWatch: zip install and git cloning.
+There are two methods to install MailWatch: zip install and git cloning.
 
 In the following instructions `/opt/mailwatch` is used as base directory for MailWatch Install, if you prefer you can use another directory that you like.
 
@@ -57,9 +57,9 @@ In the following instructions `/opt/mailwatch` is used as base directory for Mai
 ```shell
 mkdir /opt/mailwatch
 cd /opt/mailwatch
-wget https://github.com/mailwatch/MailWatch/archive/v1.2.10.zip
-unzip v1.2.10.zip -d /opt/mailwatch
-rm v1.2.10.zip
+wget https://github.com/mailwatch/MailWatch/archive/v1.2.24.zip
+unzip v1.2.24.zip -d /opt/mailwatch
+rm v1.2.24.zip
 ```
 
 #### Git cloning
@@ -77,7 +77,7 @@ git clone --depth=1 https://github.com/mailwatch/MailWatch.git --branch 1.2 --si
 
 NOTE: you will need to modify the above as necessary for your system if you have a root password for your MySQL database (which is highly recommended!).
 
-### Create a MySQL user and password & Set-up MailScanner for SQL logging
+### Create a MySQL user and password & Setup MailScanner for SQL logging
 
 ```shell
  $ mysql
@@ -95,18 +95,18 @@ MailScanner CustomFunctions path depends on MailScanner version:
   * MailScanner V4: `/usr/lib/MailScanner/MailScanner/CustomFunctions` (this could be `/opt/MailScanner/lib/MailScanner/MailScanner/CustomFunctions` on non-RPM systems).
   * MailScanner V4.86.1 or V5: `/usr/share/MailScanner/perl/custom`
 
-Symlink the others .pm files in the same MailScanner CustomFunctions directory:
+Symlink the other .pm files in the same MailScanner CustomFunctions directory:
 
 ```shell
  $ ln -s /opt/mailwatch/MailScanner_perl_scripts/MailWatch.pm /usr/share/MailScanner/perl/custom
  $ ln -s /opt/mailwatch/MailScanner_perl_scripts/SQLBlackWhiteList.pm /usr/share/MailScanner/perl/custom
  $ ln -s /opt/mailwatch/MailScanner_perl_scripts/SQLSpamSettings.pm /usr/share/MailScanner/perl/custom
 ```
-Symlinking instead of copying assure a painless upgrade in the future.
+Symlinking instead of copying will ensure a painless upgrade in the future.
 
 ### Create a MailWatch web user
 
-You need at minimum to create the administrator user 'admin' needed to access the MailWatch GUI and to handle default Spam Setting used by SQLSpamSettings.pm script.
+You need at minimum to create the administrator user 'admin' needed to access the MailWatch GUI and to handle the default Spam Setting used by SQLSpamSettings.pm script.
 
 ```shell
  $ mysql mailscanner -u mailwatch -p
@@ -115,7 +115,7 @@ You need at minimum to create the administrator user 'admin' needed to access th
 Enter password: ******
 mysql> INSERT INTO users SET username = 'admin', password = MD5('<password>'), fullname = '<name>', type = 'A'
 ```
-MD5 password hash will be updated automatically to a more secure hash on first login.
+MD5 password hash will be updated automatically to a more secure hash on the first login.
 
 ### Install and Configure MailWatch
 
@@ -138,17 +138,17 @@ Create `conf.php` by copying `conf.php.example` and edit the values to suit, you
 Note that MailWatch 1.0 and later can use the quarantine more effectively when used with MailScanner version 4.43 or later as MailScanner developers added some code for MailWatch to keep track of messages quarantined by using a flag in the maillog table.
 
 This means that MailWatch 1.0 is *much* faster when you have a large quarantine directory.  The new quarantine report requires the use of the new functionality - so you must upgrade if you want to run this.
-The new quarantine flag is used by default and you must disable the clean.quarantine script supplied by MailScanner and use the new quarantine_maint.php script in the tools directory instead.
+The new quarantine flag is used by default, and you must disable the clean.quarantine script supplied by MailScanner and use the new quarantine_maint.php script in the tools directory instead.
 
 To clean the quarantine - set `QUARANTINE_DAYS_TO_KEEP` in conf.php and run `./quarantine_maint --clean`.  This should then be run daily from cron.
 If you are still using MailScanner 4.42 or older, updating your installation is highly recommanded; if you can't update you need to set the `QUARANTINE_USE_FLAG` to false in conf.php and use the clean.quarantine script supplied by MailScanner.
 
 #### Run upgrade.php
 
-After setting up your `conf.php` file you need to run the uprade script, which will take care of some optimization for your installation:
+After setting up your `conf.php` file you need to run the uprade script, which will take care of some optimisation for your installation:
 
 * test DB connection
-* upgrade to full UTF-8 support if your MySQL installation support it (MySQL ≥ 5.5.3)
+* upgrade to full UTF-8 support if your MySQL installation supports it (MySQL ≥ 5.5.3)
 * check MailScanner configuration and alert for missing mandatory configuration
 * check conf.php and alert for missing mandatory configuration
 
@@ -156,15 +156,15 @@ After setting up your `conf.php` file you need to run the uprade script, which w
  $ php upgrade.php
 ```
 
-`upgrade.php` accepts a couple of parameter that can be useful for you:
+`upgrade.php` accepts a couple of parameters that can be useful for you:
 
 * `--skip-user-confirm`: adding this parameter will bypass confirmation for running the upgrade script
-* `/path/to/functions.php`: you can pass a non standard path for `functions.php` file used by upgrade script
+* `/path/to/functions.php`: you can pass a non-standard path for `functions.php` file used by the upgrade script
 
 #### Configure webserver
 
-It's recommended to setup a virtualhost to manage MailWatch; this setup depends on your webserver of choice.
-Below you'll find basic config example for apache and nginx, adapt them to your prefered setup (ssl, additional header, and so on).
+It's recommended to set up a virtualhost to manage MailWatch; this setup depends on your webserver of choice.
+Below you'll find basic config example for apache and nginx, adapt them to your preferred setup (ssl, additional header and so on).
 
 #### nginx
 ```nginx
@@ -256,7 +256,7 @@ Quarantine Group = mtagroup
 Quarantine Permissions = 0644
 ```
 
-Additionally set permissions for the webserver to see the postfix queue with:
+Additionally, set permissions for the webserver to see the postfix queue with:
 ```shell
 
 usermod -a -G mtagroup www-data
@@ -268,7 +268,7 @@ chmod g+rx /var/spool/postfix/hold
 
 Spam Actions and High Scoring Spam Actions should also have 'store' as one of the keywords if you want to quarantine items for learning/viewing in MailWatch.
 
-### Move the Bayesian Databases and set-up permissions (skip this if you don't use bayes).
+### Move the Bayesian Databases and setup permissions (skip this if you don't use bayes).
 
 Edit `/etc/MailScanner/spamassassin.conf`(MailScanner v5) or `/etc/MailScanner/spam.assassin.prefs.conf`(MailScanner v4) and set:
 
@@ -412,7 +412,7 @@ Point your browser to http://your-mailwatch-virtualhost-address/ - you should be
   Click on the 'Other' menu and select 'Update SpamAssassin Rule Descriptions' and click 'Run Now'.
 
 - Update the GeoIP database
-  Click on the 'Other' menu and select 'Update GeoIP database' and click 'Run Now'. To update GeoIP database you need to obtain a free License Key: you can get one by visiting www.maxmind.com . 
+  Click on the 'Other' menu and select 'Update GeoIP database' and click 'Run Now'. To update the GeoIP database, you need to get a free License Key: you can get one by visiting www.maxmind.com. 
 
 ### FINISHED!! (Phew!)
 

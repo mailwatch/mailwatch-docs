@@ -12,7 +12,7 @@ You must have a working MailScanner set-up and have running copies of:
 
 - MySQL (5.7 or greater is recommended for full UTF-8 support, and MariaDB 10.1-10.5 is reported working well too)
 - Apache / Nginx / Caddy
-- PHP 5.6 or better (with MySQL and GD support), using last stable and supported version is highly suggested
+- PHP 5.6 or better (with MySQL and GD support), using the last stable and supported version is highly suggested
 
 And for MailScanner CustomConfig modules to be able to use a work, you need:
 
@@ -26,7 +26,7 @@ Please read through the installation/upgrading instructions in their entirety be
 
 ### Upgrading DBD::MariaDB
 
-Linux distributions don't always ship updated DBD::MariaDB version: for example Debian 10 ships version 1.11, which isn't fully compatible with latest MariaDB Server.
+Linux distributions don't always ship an updated DBD::MariaDB version: for example, Debian 10 ships version 1.11, which isn't fully compatible with the latest MariaDB Server.
 
 MailWatch works well with DBD::MariaDB version 1.22 or greater, which fully supports UTF8MB4 and a great range of MySQL and MariaDB server versions; to verify your installed DBD::MariaDB version use the following command
 
@@ -34,13 +34,13 @@ MailWatch works well with DBD::MariaDB version 1.22 or greater, which fully supp
 $ perl -MDBD::MariaDB -e 'print $DBD::MariaDB::VERSION'
 ```
 
-You can update installed DBD::MariaDB package using cpan:
+You can update the installed DBD::MariaDB package using cpan:
 
 ```shell
 $ cpan -i DBD::MariaDB
 ```
 
-Verify that your installed DBD::MariaDB version is at least 1.22, use latest version when possible:
+Verify that your installed DBD::MariaDB version is at least 1.22, use the latest version when possible:
 
 ```shell
 $ perl -MDBD::mysql -e 'print $DBD::mysql::VERSION'
@@ -48,7 +48,7 @@ $ perl -MDBD::mysql -e 'print $DBD::mysql::VERSION'
 
 ### Installing Encoding::FixLatin
 
-Encoding::FixLatin can be installed with this simple command:
+Encoding::FixLatin can be installed with this command:
 
 ```shell
 $ cpan -i Encoding::FixLatin

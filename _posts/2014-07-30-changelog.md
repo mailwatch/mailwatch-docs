@@ -7,6 +7,32 @@ order: 1
 ---
 
 ## Changelog
+
+1.2.24
+-----------
+Added
+- Add support for new AV engine supported by MailScanner (avastd, eset, esetsefs, f-secure, f-prot, kaspersky, kse)
+- Allow foo@*.domain.ext in allow/block lists (#1316)
+
+Changed
+- Update htmlpurifier library to 4.17.0
+- Avoid usage of the deprecated utf8_encode function in the viewpart
+- Better Linux OS recognition
+
+Compatibility
+- The minimal PHP version is now 5.6.
+- Migrate MailScanner perl script to DBD:MariaDB
+- Update GeoIP to support authentication by account id+license key
+
+Fixes
+- Fix release of text/x-mail messages (#1306)
+- Improve ISO-8859 charset conversion (#1309)
+
+1.2.23
+-----------
+Added
+- Support for handling the `uopz` extension to prevent the application from breaking due to disabled `exit` calls by `uopz`.
+
 1.2.22
 -----------
 Fixes
