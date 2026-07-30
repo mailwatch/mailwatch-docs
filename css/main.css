@@ -104,6 +104,12 @@ footer {
     padding-top: 0;
     padding-bottom: 0;
     margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+#navigation .nav > li > a:hover,
+#navigation .nav > li > a:focus {
+    background-color: #eee;
 }
 
 ul + div.highlighter-rouge {
@@ -114,7 +120,18 @@ ul + div.highlighter-rouge {
     font-weight: 700;
 }
 
+#content pre {
+    padding: 9.5px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
 #content code {
     background: #282a36;
-    color: #f8f8f2
+    color: #f8f8f2;
+    border-radius: 4px;
+}
+
+#content code:not(pre code) {
+    padding: 2px 4px;
 }

@@ -27,4 +27,4 @@ You can find the latest version on [GitHub]({{ site.codeurl }})
 
 ## Support
 
-Subscribe to the [mailwatch-users](http://lists.sourceforge.net/lists/listinfo/mailwatch-users) mailing-list. Note that you will get faster support by using the mailing-list.
+Subscribe to the [mailwatch-users](https://lists.sourceforge.net/lists/listinfo/mailwatch-users) mailing-list. Note that you will get faster support by using the mailing-list.

@@ -1,5 +1,5 @@
 {% assign current = page.url | downcase  %}
-<ul class="nav nav-list">
+<ul class="nav flex-column">
     <!-- <li><a href="{{ site.baseurl }}/">Home</a></li> -->
     {% for section in site.sections %}
         {% assign attr = section[0] %}
@@ -9,7 +9,7 @@
             {% if forloop.first %}
                 <li class="nav-header">{{ label }}</li>
             {% endif %}
-            <li data-order="{{ sidelink.order }}" {% if current == sidelink.url %}class="current"{% endif %}><a href="{{ site.baseurl }}{{ sidelink.url }}">{{ sidelink.title }}</a></li>
+            <li data-order="{{ sidelink.order }}" {% if current == sidelink.url %}class="current"{% endif %}><a class="nav-link" href="{{ site.baseurl }}{{ sidelink.url }}">{{ sidelink.title }}</a></li>
         {% endfor %}
     {% endfor %}
 <!-- List additional links. It is recommended to add a divider
