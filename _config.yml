@@ -31,11 +31,11 @@ permalink: none
 future: true
 
 #enable some pugins
-gems:
+plugins:
   - jekyll-sitemap
 
 # Exclude non-site files
-exclude: ['bin', 'README.md', 'LICENSE.md']
+exclude: ['bin', 'README.md', 'LICENSE.md', 'vendor']
 
 # Use the kramdown Markdown renderer
 markdown: kramdown
