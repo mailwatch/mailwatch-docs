@@ -8,6 +8,15 @@ order: 1
 
 ## Changelog
 
+1.2.28
+-----------
+Security
+- Escape user management output to prevent stored XSS by domain administrators (GHSA-mr3r-q523-6cvf)
+- Escape untrusted e-mail, MTA and request data in message details, the message viewer, mail queues, reports, lists, the audit log and quarantine reports; serve message parts sandboxed and as downloads (GHSA-jcgr-2839-3jc7)
+
+Fixes
+- Fixed daily MTA rejection counts on rep_total_mail_by_date.php being overwritten instead of summed, showing only the last row of each day
+
 1.2.27
 -----------
 Security
