@@ -51,6 +51,12 @@ Several files have changed their name and location in MailWatch 1.2.0, particula
 
 Please read the documentation carefully to remove old files during the upgrade.
 
+## Upgrading from 1.2.28 to 1.2.29
+* Run `php upgrade.php`: it creates the new `login_failures` table and lists the users whose password was set to `xxxxxxxx` by the own settings form. Those users must get a new password. Until `upgrade.php` has run, logins work as before but failed logins are not limited.
+* Add the new `conf.php` entries `LOGIN_MAX_FAILURES` and `LOGIN_LOCKOUT_MINUTES` (see Optional Setup, "Failed login limit"); without them the defaults are 5 failures and 15 minutes.
+* `DB_CLEAN_OPTIMIZE` now defaults to `false`: `mailwatch_db_clean.php` runs `OPTIMIZE TABLE` only when you set it to `true`.
+* Copy the updated tools over the installed ones: `tools/Cron_jobs/mailwatch` (in `/etc/cron.daily/`), `tools/Cron_jobs/mailwatch.cron.monthly` (in `/etc/cron.monthly/mailwatch`), the `mailwatch_*.php` scripts from `tools/Cron_jobs/` in `/usr/local/bin/`, the Postfix and Sendmail relay scripts and `tools/LDAP/mailwatch_ldap_sync.sh`, then restart the relay services. The cron jobs now send their output to syslog with the tag `mailwatch-<job>`.
+
 ## Upgrading from 1.2.23 to 1.2.24
 `DBD:mysql` was replace by `DBD::MariaDB` to fully support UTF8 and MariaDB server, you need to install the new perl library:
 
