@@ -139,3 +139,12 @@ Two new `conf.php` entries have been added: `SESSION_TIMEOUT` and `SESSION_NAME`
  - `SESSION_NAME` sets the PHP session name of MailWatch instance, in case of session name conflicts. The session name can't consist of digits only, at least one letter must be present; otherwise a new session id is generated every time.
 
 Warning: setting `SESSION_TIMEOUT` to `0` can lead to security risk for your installation, if someone manage to steal your session id. 
+
+### Failed login limit
+
+As of 1.2.29 MailWatch limits the failed logins per client IP address and username, and the password reset requests per client IP address. Two `conf.php` entries set the limit:
+
+ - `LOGIN_MAX_FAILURES` sets how many failed logins an IP address can make for one username before it has to wait; the default is 5. Setting it to 0 disables the limit.
+ - `LOGIN_LOCKOUT_MINUTES` sets how long the IP address waits after the last failure; the default is 15 minutes.
+
+The counters are stored in the `login_failures` table created by `upgrade.php`, with the username hashed. Behind a reverse proxy, set `TRUSTED_PROXIES` so that MailWatch sees the real client IP address, otherwise all the clients share the proxy address. `mailwatch_db_clean.php` deletes the expired counters.
