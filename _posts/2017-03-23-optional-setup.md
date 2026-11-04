@@ -28,11 +28,13 @@ You can get MailWatch to watch your Postfix MTA logs and store all message relay
 ```shell
  $ cp tools/Postfix_relay/mailwatch-postfix-relay /etc/cron.hourly
  $ chmod +x /etc/cron.hourly/mailwatch-postfix-relay
- $ cp tools/Postfix_relay/mailwatch_postfix_relay.php /usr/local/bin
- $ cp tools/Postfix_relay/mailwatch_mailscanner_relay.php /usr/local/bin
- $ chmod +x /usr/local/bin/mailwatch_postfix_relay.php
- $ chmod +x /usr/local/bin/mailwatch_mailscanner_relay.php
+ $ ln -s /opt/mailwatch/tools/Postfix_relay/mailwatch_postfix_relay.php /usr/local/bin/
+ $ ln -s /opt/mailwatch/tools/Postfix_relay/mailwatch_mailscanner_relay.php /usr/local/bin/
+ $ chmod +x /opt/mailwatch/tools/Postfix_relay/mailwatch_postfix_relay.php
+ $ chmod +x /opt/mailwatch/tools/Postfix_relay/mailwatch_mailscanner_relay.php
 ```
+
+Link the scripts instead of copying them: through the symlink they find `functions.php` in the MailWatch directory they come from (`/opt/mailwatch` here, adjust it to your installation path), while a copy in `/usr/local/bin` looks for `/var/www/html/mailscanner/functions.php`.
 
 You will find more detail in `tools/Postfix_relay/INSTALL`
 
@@ -42,11 +44,11 @@ You will find more detail in `tools/Postfix_relay/INSTALL`
 
 The `mailwatch_sendmail_queue.php` script process the MTA Exim or Sendmail queue to store messages in MailWatch database and see them in the MailWatch GUI.
 
-Copy the `tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php` file in `/usr/local/bin` and make it executable:
+Link the `tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php` file in `/usr/local/bin` and make it executable:
 
 ```shell
- $ cp tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php /usr/local/bin
- $ chmod +x /usr/local/bin/mailwatch_sendmail_queue.php
+ $ ln -s /opt/mailwatch/tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php /usr/local/bin/
+ $ chmod +x /opt/mailwatch/tools/Sendmail-Exim_queue/mailwatch_sendmail_queue.php
  $ crontab -e
 
  # Run each minute
@@ -62,9 +64,9 @@ You can get MailWatch to watch your Sendmail MTA logs and store all message rela
 On Debian/Ubuntu:
 
 ```shell
- $ cp tools/Sendmail_relay/mailwatch_sendmail_relay.php /usr/local/bin/.
+ $ ln -s /opt/mailwatch/tools/Sendmail_relay/mailwatch_sendmail_relay.php /usr/local/bin/
  $ cp tools/Sendmail_relay/mailwatch-sendmail-relay /etc/init.d/.
- $ chmod +x /usr/local/bin/mailwatch_sendmail_relay.php
+ $ chmod +x /opt/mailwatch/tools/Sendmail_relay/mailwatch_sendmail_relay.php
  $ chmod +x /etc/init.d/mailwatch-sendmail-relay
  $ /etc/init.d/mailwatch-sendmail-relay start
  $ update-rc.d mailwatch-sendmail-relay defaults
