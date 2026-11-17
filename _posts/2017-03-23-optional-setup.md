@@ -95,6 +95,13 @@ Change file permissions so that we can update the rules and change group and rul
  $ chmod g+rw /etc/MailScanner/rules/*.rules
 ```
 
+After a rule is saved, a root cron job restarts MailScanner. Link the reload script in `/usr/local/bin` and install the cron job:
+
+```shell
+ $ ln -s /opt/mailwatch/tools/MailScanner_rule_editor/msre_reload.sh /usr/local/bin/
+ $ cp /opt/mailwatch/tools/MailScanner_rule_editor/msre_reload.crontab /etc/cron.d/msre_reload
+```
+
 See also the INSTALL docs in `tools/MailScanner_rule_editor` and `tools/Cron_jobs` directories.
 
 ### LDAP directory for user management
