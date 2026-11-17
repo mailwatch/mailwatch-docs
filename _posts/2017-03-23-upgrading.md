@@ -37,7 +37,8 @@ There are two install methods: zip install or git cloning: upgrade procedure dif
 
 ### Continue upgrade procedure
 
-* run `php upgrade.php`
+* run `php upgrade.php`; if it cannot find `functions.php`, pass the path as argument (`php upgrade.php /path/to/mailscanner/functions.php`)
+* if you copied the `mailwatch_*.php` tools scripts in `/usr/local/bin`, replace the copies with symlinks to the scripts in the `tools` directory (see Installing and Optional Setup): the symlinks follow each upgrade and find `functions.php` in your installation path
 * eventually adjust `conf.php` with new configuration entries that `upgrade.php` warned you about
 * symlink, if not already done, `MailWatch.pm`, `SQLBlackWhiteList.pm`, and `SQLSpamSettings.pm` from `MailScanner_perl_scripts` directory to MailScanner custom function directory and copy and edit `MailWatchConf.pm` to match the SQL settings
 * start MailScanner
@@ -50,6 +51,14 @@ enjoy your upgraded MailWatch!
 Several files have changed their name and location in MailWatch 1.2.0, particularly the PHP files that are launched in cron and the Init script files.
 
 Please read the documentation carefully to remove old files during the upgrade.
+
+## Upgrading from 1.2.29 to 1.2.30
+* Run `php upgrade.php`: it reports the new `conf.php` entry `RPC_VERIFY_PEER` when it is missing. `upgrade.php` now finds `functions.php` next to itself, so it no longer needs editing when MailWatch is not installed in `/var/www/html`.
+* Add `define('RPC_VERIFY_PEER', false);` to `conf.php` if you use RPC over SSL between MailWatch servers. Set it to `true` when the other servers have valid certificates: the default becomes `true` in the next release, and RPC then fails against self-signed certificates.
+* Update the installed tools: `tools/Cron_jobs/mailwatch` (in `/etc/cron.daily/`), `tools/Cron_jobs/mailwatch.cron.monthly` (in `/etc/cron.monthly/mailwatch`), `tools/Postfix_relay/mailwatch-milter-relay` (in `/etc/cron.hourly/`) and `tools/LDAP/mailwatch_ldap_sync.sh`. Replace the copies of the `mailwatch_*.php` scripts in `/usr/local/bin/` with symlinks to the scripts in the `tools` directory (see Installing and Optional Setup), then restart the relay services.
+* If MailScanner runs in a FreeBSD jail without its own loopback, set `$logging_ip` in `MailWatchConf.pm` to the IPv4 address of the jail.
+* `RESOLVE_IP_ON_DISPLAY` now applies to the message detail page too: with the default `false` it no longer resolves the relay and MTA log addresses.
+* The PHP xml extension is required only when a distributed setup talks to another MailWatch server over RPC.
 
 ## Upgrading from 1.2.28 to 1.2.29
 * Run `php upgrade.php`: it creates the new `login_failures` table and lists the users whose password was set to `xxxxxxxx` by the own settings form. Those users must get a new password. Until `upgrade.php` has run, logins work as before but failed logins are not limited.

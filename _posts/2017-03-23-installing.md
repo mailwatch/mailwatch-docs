@@ -355,15 +355,16 @@ Copy `tools/Cron_jobs/mailwatch` to `/etc/cron.daily/`
 
 You can edit `/etc/cron.daily/mailwatch` to fit your need.
 
-Copy `tools/Cron_jobs/mailwatch_db_clean.php` to `/usr/local/bin/` and make it executable:
+Link `tools/Cron_jobs/mailwatch_db_clean.php` in `/usr/local/bin/` and make it executable:
 
 ```shell
- $ cp tools/Cron_jobs/mailwatch_db_clean.php /usr/local/bin/
- $ chmod +x /usr/local/bin/mailwatch_db_clean.php
+ $ ln -s /opt/mailwatch/tools/Cron_jobs/mailwatch_db_clean.php /usr/local/bin/
+ $ chmod +x /opt/mailwatch/tools/Cron_jobs/mailwatch_db_clean.php
 ```
 
+The tools scripts find `functions.php` in the MailWatch directory they come from, so with a symlink they need no editing and follow the upgrades of your installation. A copy in `/usr/local/bin/` looks for `/var/www/html/mailscanner/functions.php` instead.
+
 You need to edit `conf.php` and change the RECORD_DAYS_TO_KEEP definition.
-You will need to edit the `mailwatch_db_clean.php` to reflect the location of the `functions.php` file.
 
 ### Quarantine Maintenance
 
@@ -371,27 +372,23 @@ For MailScanner v4: remove the clean.quarantine cronjob configured with MailScan
 
 For MailScanner v5: change the variable for Quarantine Retention to "q_days=0" in `/etc/MailScanner/defaults`.
 
-Copy `tools/Cron_jobs/mailwatch_quarantine_maint.php` to `/usr/local/bin/` and make it executable:
+Link `tools/Cron_jobs/mailwatch_quarantine_maint.php` in `/usr/local/bin/` and make it executable:
 
 ```shell
- $ cp tools/Cron_jobs/mailwatch_quarantine_maint.php /usr/local/bin/
- $ chmod +x /usr/local/bin/mailwatch_quarantine_maint.php
+ $ ln -s /opt/mailwatch/tools/Cron_jobs/mailwatch_quarantine_maint.php /usr/local/bin/
+ $ chmod +x /opt/mailwatch/tools/Cron_jobs/mailwatch_quarantine_maint.php
 ```
 
 You will need to edit `conf.php` the QUARANTINE_DAYS_TO_KEEP definition.
 
-You will need to edit the `mailwatch_quarantine_report.php` to reflect the location of the `functions.php` file.
-
 ### Quarantine Reporting
 
-Copy `tools/Cron_jobs/mailwatch_quarantine_maint.php` to `/usr/local/bin/` and make it executable:
+Link `tools/Cron_jobs/mailwatch_quarantine_report.php` in `/usr/local/bin/` and make it executable:
 
 ```shell
- $ cp tools/Cron_jobs/mailwatch_quarantine_report.php /usr/local/bin/
- $ chmod +x /usr/local/bin/mailwatch_quarantine_report.php
+ $ ln -s /opt/mailwatch/tools/Cron_jobs/mailwatch_quarantine_report.php /usr/local/bin/
+ $ chmod +x /opt/mailwatch/tools/Cron_jobs/mailwatch_quarantine_report.php
 ```
-
-You will need to edit the `mailwatch_quarantine_report.php` to reflect the location of the `functions.php` file
 
 ### Sudo file for MailWatch
 

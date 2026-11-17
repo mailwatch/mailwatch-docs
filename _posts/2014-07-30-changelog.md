@@ -8,6 +8,39 @@ order: 1
 
 ## Changelog
 
+1.2.30
+-----------
+Security
+- Clearing the SpamAssassin Bayes database requires the form token of the Bayes page; any page could make an administrator's browser clear it with a forged POST (GHSA-38p7-jrhq-2prq)
+- The rules file page shows only files inside `%etc-dir%` and `%report-dir%`; an administrator could read any file the web server can read, `conf.php` included (GHSA-38p7-jrhq-2prq)
+- Updating the SpamAssassin and MCP rule descriptions and the GeoIP database requires the form token of their page, sending a quarantine report from the user manager the session token, and logging in through the login form the token of the login page (GHSA-38p7-jrhq-2prq)
+- mailwatch_ldap_sync.sh no longer passes the LDAP and MySQL passwords on the command line, where other local users could see them in the process list while the commands start
+
+Added
+- `RPC_VERIFY_PEER` in conf.php verifies the certificates of the other MailWatch servers on RPC over SSL; it defaults to false and becomes true in the next release, and upgrade.php reports it when missing
+- `$logging_ip` in MailWatchConf.pm sets the address of the MailWatch.pm logging child, for MailScanner in a FreeBSD jail without its own loopback (#333)
+
+Changed
+- The message detail page resolves the relay and MTA log addresses only when `RESOLVE_IP_ON_DISPLAY` is true, as the message listing already did: with the default false it no longer waits for addresses that do not resolve (#1039)
+- The milter relay cron tails the mail log and restarts the relay scripts only when they are not running, instead of rereading the whole log every hour (#1265)
+- upgrade.php finds functions.php next to itself, as the tools scripts do, and falls back to `/var/www/html/mailscanner/` only when it is not there: it no longer needs editing when MailWatch is not installed in the default path
+- The tools INSTALL files link the scripts in /usr/local/bin instead of copying them, so that they find functions.php in the MailWatch directory without editing
+- The XML-RPC library is loaded only when a distributed setup talks to another MailWatch server, and the PHP xml extension is required only then
+
+Fixes
+- `%var%` variables defined in MailScanner.conf are expanded in the conf.d files too (#1245)
+- The Postfix process count on the status page counts only the master and its children (#1036)
+- upgrade.php deletes the orphaned user filters by id, which is safe for statement based replication (#825)
+- No PHP 8.2-8.5 deprecation messages from the bundled XML-RPC library and the `E_STRICT` error level in the web pages and cron jobs (#1327)
+- Messages over 10 MB open from another MailWatch server over XML-RPC, instead of failing with `XML error: No memory` (#1151)
+- mailwatch_quarantine_maint.php cleans and reconciles the quarantine of its own host when `DISTRIBUTED_SETUP` is true, instead of doing nothing, and ends with a failure status whenever it stops on an error (#1327)
+- mailwatch_db_clean.php, mailwatch_geoip_update.php, mailwatch_quarantine_report.php and mailwatch_update_sarules.php end with a failure status whenever they stop on an error; mailwatch_quarantine_report.php also when a report cannot be sent (#1327)
+- The daily and monthly cron wrappers end with a failure status when one of their scripts fails, after running all of them (#1327)
+- mailwatch_db_clean.php cleans the `mtalog_ids` table whenever it holds rows, also when `DISTRIBUTED_SETUP` is true, instead of only when the local MailScanner configuration names Postfix or MSMilter as MTA (#1327)
+- In a distributed setup the web interface can view and release the messages quarantined on another MailScanner host: the host read its quarantine directory as empty when its own `DISTRIBUTED_SETUP` was true (#1327)
+- A user whose address or user filter contains an apostrophe, such as `o'brien@example.com`, can log in instead of getting an SQL error
+- The MCP report on the message detail page shows the score, the name and the description of each rule; it showed the rule name in the score column and no description
+
 1.2.29
 -----------
 Security
